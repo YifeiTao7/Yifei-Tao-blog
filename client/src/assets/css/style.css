@@ -37,7 +37,32 @@ h5,
 h6 {
   font-family: "Raleway", sans-serif;
 }
+/*--------------------------------------------------------------
+# register button
+--------------------------------------------------------------*/
+.btn-register {
+  background-color: #37b3ed; /* 按钮背景颜色，稍亮的蓝色以吸引注意 */
+  color: white; /* 文字颜色 */
+  border: none; /* 不显示边框 */
+  padding: 10px 20px; /* 内边距 */
+  font-family: "Raleway", sans-serif; /* 字体样式 */
+  font-size: 16px; /* 字体大小 */
+  text-transform: uppercase; /* 文字大写 */
+  border-radius: 50px; /* 圆角边框 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 简单的阴影效果 */
+  transition: all 0.3s ease; /* 平滑过渡效果 */
+  cursor: pointer; /* 鼠标样式 */
+  position: absolute; /* 绝对定位 */
+  top: 20px; /* 距离顶部20px */
+  right: 20px; /* 距离右边20px */
+  z-index: 5; /* 足够的 z-index 以确保在其他内容上方 */
+}
 
+.btn-register:hover, .btn-register:focus {
+  background-color: #149ddd; /* 鼠标悬停或聚焦时的背景颜色 */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* 悬停时更大的阴影效果 */
+  transform: translateY(-2px); /* 按钮向上移动的小效果 */
+}
 /*--------------------------------------------------------------
 # Back to top button
 --------------------------------------------------------------*/

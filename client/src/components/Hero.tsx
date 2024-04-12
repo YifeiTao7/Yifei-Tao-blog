@@ -1,8 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Typed from 'typed.js';
+import RegisterModal from './RegisterModal'; // 确保路径正确
 
 const Hero = () => {
   const typed = useRef<any>(null);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
 
   useEffect(() => {
     const options = {
@@ -23,18 +25,33 @@ const Hero = () => {
     };
   }, []);
 
+  const toggleRegisterModal = () => {
+    setShowRegisterModal(!showRegisterModal);
+  };
+
   return (
     <section 
-  id="hero" 
-  className="d-flex flex-column justify-content-center align-items-center"
-  style={{ minHeight: '100vh' }}
->
-  <div className="hero-container" data-aos="fade-in">
-    <h1>I'm Felix Tao</h1>
-    <p><span className="typed"></span></p>
-  </div>
-</section>
-
+      id="hero" 
+      className="d-flex flex-column justify-content-center align-items-center"
+      style={{ minHeight: '100vh', position: 'relative' }} // 确保这里是相对定位
+    >
+      <div className="hero-container" data-aos="fade-in">
+        <h1>I'm Felix Tao</h1>
+        <p><span className="typed"></span></p>
+        <button 
+          className="btn btn-register"
+          onClick={toggleRegisterModal}
+          style={{
+            position: 'absolute', // 绝对定位
+            top: '20px', // 距离顶部20px
+            right: '20px', // 距离右边20px
+          }}
+        >
+          Register
+        </button>
+      </div>
+      <RegisterModal show={showRegisterModal} toggleModal={toggleRegisterModal} />
+    </section>
   );
 };
 
