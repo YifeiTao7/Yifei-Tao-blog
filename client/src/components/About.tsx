@@ -1,5 +1,4 @@
 import React from 'react';
-import profile3Img from '../assets/img/profile3-img.jpg';
 
 const About = () => {
   return (
@@ -13,7 +12,7 @@ const About = () => {
 
         <div className="row align-items-start">
           <div className="col-lg-4" data-aos="fade-right">
-            <img src={profile3Img} className="img-fluid profile-img" alt="Profile" />
+            <img src={'/assets/img/profile3-img.jpg'} className="img-fluid profile-img" alt="Profile" />
           </div>
           <div className="col-lg-8 pt-4 pt-lg-0 content" data-aos="fade-left">
             <h3>Full-stack Developer.</h3>

@@ -5,8 +5,9 @@ import About from './components/About';
 import Fact from './components/Fact';
 import Skill from './components/Skill';
 import Contact from './components/Contact';
+import Portfolio from './components/Portfolio';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import 'bootstrap/dist/css/bootstrap.min.css'; // 如果使用Bootstrap样式
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
@@ -24,6 +25,7 @@ const App = () => {
         <About />
         <Fact />
         <Skill />
+        <Portfolio/>
         <Contact />
         {/* 其他可能的组件 */}
       </main>

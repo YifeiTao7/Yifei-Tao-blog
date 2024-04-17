@@ -1,26 +1,25 @@
 import React from 'react';
-import Register from './Register'; // 确保路径正确
+import Auth from './Auth';
 
 interface RegisterModalProps {
   show: boolean;
   toggleModal: () => void;
+  onLoginSuccess: (username: string) => void;
 }
 
-const RegisterModal = ({ show, toggleModal }: RegisterModalProps) => {
-  if (!show) {
-    return null;
-  }
+const RegisterModal = ({ show, toggleModal, onLoginSuccess }: RegisterModalProps) => {
+  if (!show) return null;
 
   return (
-    <div className="modal" style={{ display: show ? 'block' : 'none' }}>
+    <div className="modal show" tabIndex={-1} style={{ display: show ? 'block' : 'none' }}>
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">注册</h5>
+            <h5 className="modal-title">Login / Register</h5>
             <button type="button" className="btn-close" aria-label="Close" onClick={toggleModal}></button>
           </div>
           <div className="modal-body">
-            <Register />
+            <Auth onLoginSuccess={onLoginSuccess} toggleModal={toggleModal} />
           </div>
         </div>
       </div>

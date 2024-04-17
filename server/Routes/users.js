@@ -38,4 +38,31 @@ router.post('/register', async (req, res) => {
   }
 });
 
+// 用户登录的路由处理器
+router.post('/login', async (req, res) => {
+  console.log('Login endpoint called with body:', req.body); // 日志请求体内容
+
+  try {
+    // 查找用户
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+      console.log('User not found with email:', req.body.email); // 如果用户不存在，记录日志
+      return res.status(400).send('Invalid email or password');
+    }
+
+    // 验证密码
+    const validPassword = await bcrypt.compare(req.body.password, user.password);
+    if (!validPassword) {
+      console.log('Invalid password for user:', req.body.email); // 如果密码不匹配，记录日志
+      return res.status(400).send('Invalid email or password');
+    }
+
+    // 发送成功响应
+    res.status(200).send('Login successful');
+  } catch (error) {
+    console.error('Error during login:', error); // 记录异常的日志
+    res.status(500).send('Server error');
+  }
+});
+
 module.exports = router;

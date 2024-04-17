@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-scroll';
-import profileImg from '../assets/img/profile-img.jpg';
 import 'boxicons/css/boxicons.min.css';
-import '../assets/css/style.css';
 
 const Header = () => {
   const [isActive, setIsActive] = useState(false);
@@ -41,7 +39,7 @@ const Header = () => {
   return (
     <header id="header" className={`d-flex flex-column ${navBarActiveClass}`}>
       <div className="profile">
-        <img src={profileImg} alt="Profile" style={{ borderRadius: '50%', width: '150px', height: '150px' }} className="img-fluid" />
+        <img src={'/assets/img/profile-img.jpg'} alt="Profile" style={{ borderRadius: '50%', width: '150px', height: '150px' }} className="img-fluid" />
         <h1 className="text-light"><a href="index.html">Felix Tao</a></h1>
         <div className="social-links mt-3 text-center">
           <a href="#" style={iconStyle} className="twitter"><i className="bx bxl-twitter"></i></a>
