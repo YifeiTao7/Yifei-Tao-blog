@@ -1,44 +1,78 @@
 require('dotenv').config(); // 加载.env文件中的环境变量
 const express = require('express');
-const { connectToServer } = require('./db'); // 注意这里的路径
-const userRoutes = require('./Routes/users'); // 用户路由
-const portfolioRoutes = require('./Routes/portfolio'); // 投资组合路由，注意大小写应与文件夹名称相匹配
 const mongoose = require('mongoose');
 const cors = require('cors');
+const nodemailer = require('nodemailer');
+
+// 导入路由
+const userRoutes = require('./Routes/users');
+const portfolioRoutes = require('./Routes/portfolio');
+const lifeItemsRouter = require('./Routes/LifeItem');
+const uploadRoutes = require('./Routes/uploadRoutes');
 
 const app = express();
 
-// 连接到 MongoDB
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('MongoDB connected successfully.'))
-  .catch(err => console.error('MongoDB connection error:', err));
+// MongoDB 连接
+mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => console.log('MongoDB connected successfully.'))
+.catch(err => console.error('MongoDB connection error:', err));
 
-app.use(cors());
-app.use(express.json()); // 解析 JSON 请求体
+app.use(cors()); // 允许跨域请求
+app.use(express.json()); // 解析 JSON 格式的请求体
 
-// 连接到数据库
-connectToServer((err) => {
-  if (err) {
-    console.error('Unable to connect to MongoDB', err);
-    process.exit();
-  }
+// 邮件发送设置
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_USERNAME,
+        pass: process.env.EMAIL_PASSWORD,
+    }
+});
 
-  // 使用用户和投资组合路由
-  app.use('/api/users', userRoutes);
-  app.use('/api/portfolio', portfolioRoutes); // 这里添加了投资组合路由
+// 发送邮件的路由
+app.post('/send-email', (req, res) => {
+    const { name, email, subject, message } = req.body;
+    const mailOptions = {
+        from: email,
+        to: process.env.TARGET_EMAIL,
+        subject: subject,
+        text: `You received a message from ${name} (${email}): ${message}`,
+    };
 
-  // 错误处理
-  app.use((req, res, next) => {
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error('Error sending email:', error);
+            res.status(500).send({ message: 'Error sending email', error: error });
+        } else {
+            console.log('Email sent:', info.response);
+            res.status(200).send({ message: 'Email sent successfully' });
+        }
+    });
+});
+
+// 应用路由
+app.use('/api/users', userRoutes);
+app.use('/api/portfolio', portfolioRoutes);
+app.use('/api/life', lifeItemsRouter);
+app.use('/api', uploadRoutes);
+
+// 静态文件服务
+app.use(express.static('client/public'));
+
+// 错误处理
+app.use((req, res, next) => {
     res.status(404).send('Sorry, that route does not exist.');
-  });
-  app.use((err, req, res, next) => {
+});
+app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something broke!');
-  });
+});
 
-  // 服务器监听端口
-  const port = process.env.PORT || 3001;
-  app.listen(port, () => {
+// 服务器端口监听
+const port = process.env.PORT || 3001;
+app.listen(port, () => {
     console.log(`Server running on port ${port}`);
-  });
 });

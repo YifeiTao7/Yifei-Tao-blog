@@ -1,68 +1,74 @@
+// user.routes.js
 const express = require('express');
-const router = express.Router();
-const User = require('../models/user'); // 确保路径正确
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('../models/user'); // 确保路径正确
+const router = express.Router();
 
-// 注册新用户的路由处理器
+// 注册路由
 router.post('/register', async (req, res) => {
-  console.log('Register endpoint called with body:', req.body); // 日志请求体内容
-
   try {
-    // 检查用户是否已存在
+    // 检查邮箱是否已经被注册
     const existingUser = await User.findOne({ email: req.body.email });
     if (existingUser) {
-      console.log('Email already in use:', req.body.email); // 如果邮箱已被使用，记录日志
-      return res.status(400).send('Email already in use');
+      return res.status(400).json({ message: 'Email already in use' });
     }
 
-    // 对密码进行哈希处理
+    // 密码加密
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    console.log('Password was hashed'); // 记录密码已经被哈希处理
 
-    // 创建新用户对象
-    const user = new User({
+    // 创建新用户
+    const newUser = new User({
       username: req.body.username,
       email: req.body.email,
-      password: hashedPassword,
+      password: hashedPassword
     });
 
-    // 保存用户到数据库
-    await user.save();
-    console.log('User registered successfully:', user); // 记录用户成功注册的日志
+    // 保存到数据库
+    await newUser.save();
 
-    // 发送成功响应
-    res.status(201).send('User registered successfully');
+    // 返回成功响应
+    res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
-    console.error('Error during registration:', error); // 记录异常的日志
-    res.status(500).send('Server error');
+    console.error(error);
+    res.status(500).json({ message: 'Error registering new user' });
   }
 });
 
-// 用户登录的路由处理器
 router.post('/login', async (req, res) => {
-  console.log('Login endpoint called with body:', req.body); // 日志请求体内容
-
   try {
     // 查找用户
     const user = await User.findOne({ email: req.body.email });
     if (!user) {
-      console.log('User not found with email:', req.body.email); // 如果用户不存在，记录日志
-      return res.status(400).send('Invalid email or password');
+      return res.status(400).json({ message: 'Invalid credentials' });
     }
 
     // 验证密码
     const validPassword = await bcrypt.compare(req.body.password, user.password);
     if (!validPassword) {
-      console.log('Invalid password for user:', req.body.email); // 如果密码不匹配，记录日志
-      return res.status(400).send('Invalid email or password');
+      return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    // 发送成功响应
-    res.status(200).send('Login successful');
+    // 生成 JWT
+    const token = jwt.sign(
+      { userId: user._id, username: user.username, email: user.email }, // 在JWT中也包含电子邮件
+      process.env.JWT_SECRET || 'your_default_secret',
+      { expiresIn: '1h' }
+    );
+
+    // 如果密码验证成功，返回成功响应、用户名、电子邮件和 token
+    res.status(200).json({
+      message: 'Login successful',
+      username: user.username,
+      email: user.email,  // 确保这里返回了电子邮件
+      token: token
+    });
+
   } catch (error) {
-    console.error('Error during login:', error); // 记录异常的日志
-    res.status(500).send('Server error');
+    console.error(error);
+    res.status(500).json({ message: 'Error logging in user' });
   }
 });
+
 
 module.exports = router;
