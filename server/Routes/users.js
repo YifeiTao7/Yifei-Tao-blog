@@ -40,8 +40,22 @@ router.post('/register', upload.single('avatar'), async (req, res) => {
       avatar: avatarPath
     });
 
-    await newUser.save();
-    res.status(201).json({ message: "User registered successfully" });
+    const savedUser = await newUser.save();
+
+    // 创建 token
+    const token = jwt.sign(
+      { userId: savedUser._id, email: savedUser.email },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    // 返回 token 和用户信息
+    res.status(201).json({
+      message: "User registered successfully",
+      token,
+      username: savedUser.username,
+      avatar: savedUser.avatar
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error registering new user" });

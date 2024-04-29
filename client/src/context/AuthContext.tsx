@@ -64,25 +64,35 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   
 
 
-const register = async (formData: any) => { // 这里的 formData 为 FormData 类型
-  try {
-    const response = await axiosInstance.post('/users/register', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    });
-    if (response.data.token) {
-      localStorage.setItem('token', response.data.token);
-      setUser({
-        username: response.data.username,
-        email: response.data.email,
-        avatar: response.data.avatar
+  const register = async (formData: FormData) => {
+    try {
+      const response = await axiosInstance.post('/users/register', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       });
+
+      if (response.data.token) {
+        // 注册成功，保存 token 并设置用户状态
+        localStorage.setItem('token', response.data.token);
+        setUser({
+          username: response.data.username,
+          email: response.data.email,
+          avatar: response.data.avatar
+        });
+        setError(''); // 如果有错误消息，清空它
+      } else {
+        // 如果注册成功但是没有返回 token，则需要手动调用 login
+        await login({
+          email: formData.get('email') as string,
+          password: formData.get('password') as string,
+        });
+      }
+    } catch (err: any) {
+      console.error('Registration error:', err);
+      setError(err.response ? err.response.data.message : '注册过程中出现错误');
     }
-    console.log(response.data.message); // 显示成功或错误消息
-  } catch (err) {
-  }
-};
+  };
 
 
   const logout = () => {
