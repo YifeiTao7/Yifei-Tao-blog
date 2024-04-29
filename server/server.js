@@ -5,10 +5,12 @@ const cors = require('cors');
 const nodemailer = require('nodemailer');
 
 // 导入路由
+const statisticsRouter = require('./Routes/statistics');
 const userRoutes = require('./Routes/users');
 const portfolioRoutes = require('./Routes/portfolio');
 const lifeItemsRouter = require('./Routes/LifeItem');
 const uploadRoutes = require('./Routes/uploadRoutes');
+const messagesRouter = require('./Routes/messages');
 
 const app = express();
 
@@ -58,6 +60,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/portfolio', portfolioRoutes);
 app.use('/api/life', lifeItemsRouter);
 app.use('/api', uploadRoutes);
+app.use('/api/stats', statisticsRouter);
+app.use('/api', messagesRouter);
 
 // 静态文件服务
 app.use(express.static('client/public'));

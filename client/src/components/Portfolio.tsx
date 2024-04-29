@@ -2,17 +2,16 @@ import React, { useEffect, useState, useRef } from 'react';
 import Isotope from 'isotope-layout';
 import GLightbox from 'glightbox';
 import 'glightbox/dist/css/glightbox.min.css';
-import AOS from 'aos';
 import 'aos/dist/aos.css';
+import AOS from 'aos';
 import PortfolioItem from './PortfolioItem';
-import axiosInstance from '../axios.config'; // 导入自定义的axios实例，确保路径正确
+import axiosInstance from '../axios.config'; // 确保路径正确
 
 interface Project {
     id: number;
-    category: string;
-    imageUrl: string;
+    category: string;  // 'personal', 'professional', 'school'
+    imageUrls: string[];
     title: string;
-    projectDetailsUrl: string;
 }
 
 const Portfolio = () => {
@@ -20,79 +19,73 @@ const Portfolio = () => {
     const isoRef = useRef<HTMLDivElement | null>(null);
     const isotope = useRef<Isotope | null>(null);
     const [projectsFetched, setProjectsFetched] = useState(false);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axiosInstance.get('/api/portfolio/all');
+                const response = await axiosInstance.get('/portfolio/all');
                 setProjects(response.data);
-                setProjectsFetched(true); // 设置状态为已获取数据
+                setProjectsFetched(true);
             } catch (error) {
                 console.error('Error fetching projects:', error);
             }
         };
-    
+
         fetchData();
         AOS.init({ duration: 1000, once: true });
     
         return () => {
-            // 清理操作
+            // Clean up
         };
     }, []);
-    
+
     useEffect(() => {
-        // 当项目加载完成后且容器存在时才初始化 Isotope
         if (projectsFetched && isoRef.current) {
             isotope.current = new Isotope(isoRef.current, {
                 itemSelector: '.portfolio-item',
                 layoutMode: 'fitRows'
             });
-    
+
             const lightbox = GLightbox({
                 selector: '.glightbox'
             });
-            isotope.current.layout(); // 手动触发 Isotope 的布局
+
+            isotope.current.layout();
             return () => {
                 isotope.current?.destroy();
                 lightbox.close();
             };
         }
     }, [projectsFetched]);
-    
+
     useEffect(() => {
-        // 当项目状态发生变化时，手动触发 Isotope 的布局
         if (projectsFetched && isotope.current) {
             isotope.current.layout();
         }
     }, [projects, projectsFetched]);
-    
-    
-    
-    
 
     const [filterKey, setFilterKey] = useState('*');
     useEffect(() => {
         if (isotope.current) {
-            // 将 filterKey 转换为选择器字符串
             const filterValue = filterKey === '*' ? '*' : `.${filterKey}`;
-            isotope.current.arrange({ filter: filterValue }); // 将 filterValue 作为参数传递给 arrange 方法
+            isotope.current.arrange({ filter: filterValue });
         }
     }, [filterKey]);
-
 
     return (
         <section id="portfolio" className="portfolio section-bg">
             <div className="container">
                 <div className="section-title">
                     <h2>Portfolio</h2>
-                    <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem...</p>
+                    <p>These are the projects I have been fortunate enough to participate in and the results of my work</p>
                 </div>
                 <div className="row" data-aos="fade-up">
                     <div className="col-lg-12 d-flex justify-content-center">
                         <ul id="portfolio-flters">
                             <li className={filterKey === '*' ? 'filter-active' : ''} onClick={() => setFilterKey('*')}>All</li>
-                            <li className={filterKey === 'app' ? 'filter-active' : ''} onClick={() => setFilterKey('filter-app')}>App</li>
-                            <li className={filterKey === 'card' ? 'filter-active' : ''} onClick={() => setFilterKey('filter-card')}>Card</li>
-                            <li className={filterKey === 'web' ? 'filter-active' : ''} onClick={() => setFilterKey('filter-web')}>Web</li>
+                            <li className={filterKey === 'personal' ? 'filter-active' : ''} onClick={() => setFilterKey('filter-personal')}>Personal Projects</li>
+                            <li className={filterKey === 'professional' ? 'filter-active' : ''} onClick={() => setFilterKey('filter-professional')}>Professional Projects</li>
+                            <li className={filterKey === 'school' ? 'filter-active' : ''} onClick={() => setFilterKey('filter-school')}>School Projects</li>
                         </ul>
                     </div>
                 </div>
@@ -101,9 +94,8 @@ const Portfolio = () => {
                         <PortfolioItem
                             key={project.id}
                             category={project.category}
-                            imageUrl={project.imageUrl}
+                            imageUrl={process.env.PUBLIC_URL + (project.imageUrls.length > 0 ? project.imageUrls[0] : '')}
                             title={project.title}
-                            projectDetailsUrl={project.projectDetailsUrl}
                         />
                     ))}
                 </div>

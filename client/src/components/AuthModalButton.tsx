@@ -1,35 +1,32 @@
+// AuthModalButton.tsx
 import React, { useState } from 'react';
-import RegisterModal from './RegisterModal'; // 确保路径正确
+import RegisterModal from './RegisterModal';
+import { useAuth } from '../context/AuthContext';
 
-const AuthModalButton = () => {
+// Define the type for the component's props
+interface AuthModalButtonProps {
+  isMessageBoard?: boolean; // This prop is optional
+}
+
+const AuthModalButton: React.FC<AuthModalButtonProps> = ({ isMessageBoard = false }) => {
+  const { user, logout } = useAuth();
   const [showModal, setShowModal] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [username, setUsername] = useState('');
 
   const toggleModal = () => setShowModal(!showModal);
 
-  const handleLoginSuccess = (username: string) => {
-    console.log('Logged in as:', username); // 添加日志
-    setIsAuthenticated(true);
-    setUsername(username);
-  };
-
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    setUsername('');
-  };
+  const btnClass = isMessageBoard ? "btn-register-message-board" : "btn-register";
 
   return (
     <>
-      {isAuthenticated ? (
-         <div className="user-info">
-         <span className="user-name">{username}</span>
-         <button onClick={handleLogout} className="logout-btn">Logout</button>
-       </div>
+      {user ? (
+        <div className="user-info">
+          <span className="user-name">{user.username}</span>
+          <button onClick={logout} className="logout-btn">Logout</button>
+        </div>
       ) : (
-        <button onClick={toggleModal} className="btn btn-register">Login / Register</button>
+        <button onClick={toggleModal} className={`btn ${btnClass}`}>Login / Register</button>
       )}
-      <RegisterModal show={showModal} toggleModal={toggleModal} onLoginSuccess={handleLoginSuccess} />
+      <RegisterModal show={showModal} toggleModal={toggleModal} />
     </>
   );
 };

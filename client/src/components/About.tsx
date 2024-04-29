@@ -7,20 +7,19 @@ const About = () => {
 
         <div className="section-title">
           <h2>About</h2>
-          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
         </div>
 
         <div className="row align-items-start">
           <div className="col-lg-4" data-aos="fade-right">
-            <img src={'/assets/img/profile3-img.jpg'} className="img-fluid profile-img" alt="Profile" />
+            <img src={process.env.PUBLIC_URL +'/assets/img/profile3-img.jpg'} className="img-fluid profile-img" alt="Profile" />
           </div>
-          <div className="col-lg-8 pt-4 pt-lg-0 content" data-aos="fade-left">
+          <div className="col-lg-8 pt-4 pt-lg-0 content" data-aos="fade-left" style={{ marginTop: '50px' }}>
             <h3>Full-stack Developer.</h3>
             <p className="artistic-text">
               First, to know the nature of things
               <span style={{ fontSize: 'smaller', color: '#666', textAlign: 'right', display: 'block', marginRight: 20 }}>- Lucretius</span>
             </p>
-            <div className="row">
+            <div className="row" style={{ marginTop: '100px' }}>
               <div className="col-lg-6">
                 <ul>
                   <li><i className="bi bi-chevron-right"></i> <strong>Birthday:</strong> <span>7 April 1997</span></li>
@@ -38,7 +37,7 @@ const About = () => {
               </div>
             </div>
             <p>
-              Energetic Computer Science Master's graduate skilled in HTML, CSS, JavaScript, Python, Java, and modern frameworks such as React and Next.js. Recognized for a strong work ethic, quick learning capability, and excellent problem-solving skills. Thrives in team settings, contributing to project success with a proactive and collaborative approach.
+            Hello everyone! I'm an energetic and optimistic person who loves embracing life with a positive attitude each day. I have a great passion for basketball and tennis, both of which keep me healthy and bring immense joy and challenge to my life. At work, I always maintain a proactive stance, striving to perform at my best. I believe that through teamwork and personal effort, we can achieve any goal. I'm looking forward to building a bright future together with all of you and hope to meet more like-minded friends to share the joys of life.
             </p>
           </div>
         </div>

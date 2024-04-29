@@ -1,7 +1,7 @@
+// models/user.js
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-  // 定义字段
   username: {
     type: String,
     required: true,
@@ -15,8 +15,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // 其他字段...
+  avatar: {   // 新增头像字段
+    type: String,
+    default: ''
+  },
 });
 
-const User = mongoose.model('User', userSchema, 'users'); // 第三个参数指定集合名，如果省略，默认为模型名的小写复数形式
+const User = mongoose.model('User', userSchema, 'users');
 module.exports = User;

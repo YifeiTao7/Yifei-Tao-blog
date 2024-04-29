@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // 修改为接受多个文件的上传
-router.post('/upload/:type', upload.array('file', 10), (req, res) => { // 假设最多可以上传10个文件
+router.post('/upload/:type', upload.array('files', 10), (req, res) => { // 假设最多可以上传10个文件
   console.log(`Received ${req.files.length} files`); // 打印接收到的文件数量
   if (req.files && req.files.length > 0) {
     // 使用 map 来生成所有上传文件的 URL 列表

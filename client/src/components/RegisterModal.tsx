@@ -1,13 +1,12 @@
 import React from 'react';
-import Auth from './Auth';
+import Auth from './Auth'; // 确保路径正确
 
 interface RegisterModalProps {
   show: boolean;
   toggleModal: () => void;
-  onLoginSuccess: (username: string) => void;
 }
 
-const RegisterModal = ({ show, toggleModal, onLoginSuccess }: RegisterModalProps) => {
+const RegisterModal = ({ show, toggleModal }: RegisterModalProps) => {
   if (!show) return null;
 
   return (
@@ -19,7 +18,7 @@ const RegisterModal = ({ show, toggleModal, onLoginSuccess }: RegisterModalProps
             <button type="button" className="btn-close" aria-label="Close" onClick={toggleModal}></button>
           </div>
           <div className="modal-body">
-            <Auth onLoginSuccess={onLoginSuccess} toggleModal={toggleModal} />
+            <Auth toggleModal={toggleModal} />
           </div>
         </div>
       </div>

@@ -72,6 +72,7 @@ const Skills = () => {
   const database = useSkillAnimation(initialSkills.filter((skill) => skill.category === 'Database'), '#ff7f50');
 
   return (
+    <section id="skills" className="skills section-bg">
     <div className="container">
       <div className="row">
         <div className="col"><SkillCard title="Frontend Skills" {...frontend} /></div>
@@ -79,6 +80,7 @@ const Skills = () => {
         <div className="col"><SkillCard title="Database Skills" {...database} /></div>
       </div>
     </div>
+    </section>
   );
 };
 

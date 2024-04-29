@@ -38,7 +38,6 @@ const Facts = () => {
       <div className="container">
         <div className="section-title">
           <h2>Facts</h2>
-          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem.</p>
         </div>
 
         <div className="row no-gutters">
