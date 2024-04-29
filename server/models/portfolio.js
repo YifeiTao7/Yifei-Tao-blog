@@ -10,7 +10,8 @@ const portfolioSchema = new mongoose.Schema({
   endDate: Date,
   role: String,
   githubUrl: String,
-  liveDemoUrl: String
+  liveDemoUrl: String,
+  likes: { type: Number, default: 0 } // 点赞数，默认为0
 });
 
 const Portfolio = mongoose.model('Portfolio', portfolioSchema);

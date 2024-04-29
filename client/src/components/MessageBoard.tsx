@@ -74,6 +74,7 @@ const MessageBoard: React.FC<MessageBoardProps> = ({ projectId }) => {
 
   return (
     <div className="message-board-container">
+      <h1 style={{ textAlign: 'center' }}>Message Board</h1>
       {messages.map((message) => (
         <div key={message._id} className="message-box">
           <div className="message-header">

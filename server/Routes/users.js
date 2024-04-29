@@ -21,7 +21,8 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// 注册用户
+const Statistic = require('../models/Statistic'); // 引入统计数据模型
+
 router.post('/register', upload.single('avatar'), async (req, res) => {
   const { username, email, password } = req.body;
   try {
@@ -42,6 +43,9 @@ router.post('/register', upload.single('avatar'), async (req, res) => {
 
     const savedUser = await newUser.save();
 
+    // 更新用户统计
+    await updateStatistic("Active Users", 1); // 假设这个函数逻辑正确处理增加用户数量
+
     // 创建 token
     const token = jwt.sign(
       { userId: savedUser._id, email: savedUser.email },
@@ -61,6 +65,14 @@ router.post('/register', upload.single('avatar'), async (req, res) => {
     res.status(500).json({ message: "Error registering new user" });
   }
 });
+
+async function updateStatistic(title, increment) {
+  const statistic = await Statistic.findOneAndUpdate(
+    { title: title },
+    { $inc: { count: increment } },
+    { new: true, upsert: true } // 创建统计项如果不存在
+  );
+}
 
 // 用户登录
 router.post('/login', async (req, res) => {

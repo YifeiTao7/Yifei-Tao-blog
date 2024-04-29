@@ -1,7 +1,7 @@
 const express = require('express');
 const LifeItem = require('../models/LifeItem'); // 确保这个路径匹配你的模型文件位置
 const router = express.Router();
-
+const { incrementPublishCount } = require('../utils/statisticHelpers');
 // 获取所有生活片段
 router.get('/', async (req, res) => {
   try {
@@ -34,6 +34,7 @@ router.post('/add', async (req, res) => {
 
   try {
     const newItem = await item.save(); // 保存新创建的 LifeItem 实例到数据库
+    await incrementPublishCount();
     res.status(201).json(newItem); // 返回成功状态码和新创建的项目
   } catch (err) {
     res.status(400).json({ message: err.message }); // 处理错误，比如模型验证失败

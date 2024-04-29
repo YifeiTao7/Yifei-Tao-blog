@@ -948,14 +948,16 @@ section {
   justify-content: center;
 }
 
-.portfolio .portfolio-wrap .portfolio-links a {
+.portfolio .portfolio-wrap .portfolio-links .portfolio-action {
   color: #fff;
   font-size: 28px;
   text-align: center;
   background: rgba(20, 157, 221, 0.75);
   transition: 0.3s;
   width: 50%;
+  display: block; /* Ensure it applies properly to both inline (Link) and block (button) elements */
 }
+
 
 .portfolio .portfolio-wrap .portfolio-links a:hover {
   background: rgba(20, 157, 221, 0.95);

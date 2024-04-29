@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axiosInstance from '../axios.config';  // Ensure the path is correct
 import FileDrop from '../components/FileDrop';
+import PortfolioList from '../AdminComponents/PortfolioList';
 
 interface PortfolioData {
   category: string;
@@ -158,6 +159,7 @@ const AdminPage = () => {
 
       {loading && <p>Loading...</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
+      <PortfolioList></PortfolioList>
     </div>
   );
 };

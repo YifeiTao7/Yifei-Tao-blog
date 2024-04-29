@@ -8,10 +8,11 @@ import PortfolioItem from './PortfolioItem';
 import axiosInstance from '../axios.config'; // 确保路径正确
 
 interface Project {
-    id: number;
+    _id: string; // MongoDB uses _id
     category: string;  // 'personal', 'professional', 'school'
     imageUrls: string[];
     title: string;
+    likes: number;  // 添加点赞数
 }
 
 const Portfolio = () => {
@@ -71,6 +72,21 @@ const Portfolio = () => {
             isotope.current.arrange({ filter: filterValue });
         }
     }, [filterKey]);
+    
+    const handleLike = async (projectId: string) => {
+        try {
+            const response = await axiosInstance.post(`/portfolio/${projectId}/like`);
+            const updatedProjects = projects.map(project => {
+                if (project._id === projectId) {
+                    return { ...project, likes: project.likes + 1 }; // Assuming the backend response includes the new number of likes
+                }
+                return project;
+            });
+            setProjects(updatedProjects);
+        } catch (error) {
+            console.error('Error liking the project:', error);
+        }
+    };
 
     return (
         <section id="portfolio" className="portfolio section-bg">
@@ -92,10 +108,13 @@ const Portfolio = () => {
                 <div className="row portfolio-container" ref={isoRef} data-aos="fade-up" data-aos-delay="100">
                     {projects.map(project => (
                         <PortfolioItem
-                            key={project.id}
+                            key={project._id}
                             category={project.category}
                             imageUrl={process.env.PUBLIC_URL + (project.imageUrls.length > 0 ? project.imageUrls[0] : '')}
                             title={project.title}
+                            likes={project.likes}
+                            onLike={() => handleLike(project._id)}
+                            id={project._id}
                         />
                     ))}
                 </div>

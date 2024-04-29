@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
+const updatePageViews = require('./middlewares/updatePageViews'); 
 
 // 导入路由
 const statisticsRouter = require('./Routes/statistics');
@@ -24,6 +25,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 app.use(cors()); // 允许跨域请求
 app.use(express.json()); // 解析 JSON 格式的请求体
+app.use(updatePageViews);
 
 // 邮件发送设置
 const transporter = nodemailer.createTransport({
@@ -60,7 +62,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/portfolio', portfolioRoutes);
 app.use('/api/life', lifeItemsRouter);
 app.use('/api', uploadRoutes);
-app.use('/api/stats', statisticsRouter);
+app.use('/api/statistics', statisticsRouter);
 app.use('/api', messagesRouter);
 
 // 静态文件服务
