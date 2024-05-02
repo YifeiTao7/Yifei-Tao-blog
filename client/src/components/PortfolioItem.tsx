@@ -22,7 +22,7 @@ const PortfolioItem = ({ category, imageUrl, title, likes, onLike, id }: Portfol
             <span> {likes} Likes</span>
           </button>
           {/* More Details link with updated class */}
-          <Link to={`/portfolio/${id}`} title="More Details" className="portfolio-action">
+          <Link to={`/portfolio/${title}`} title="More Details" className="portfolio-action">
             <i className="bx bx-link"></i>
           </Link>
         </div>

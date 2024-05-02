@@ -3,9 +3,10 @@ import { Accept, useDropzone } from 'react-dropzone';
 
 interface FileDropProps {
   onDrop: (acceptedFiles: File[]) => void;  // This prop is called when files are accepted
+  clearPreviews?: () => void; // Make clearPreviews optional
 }
 
-const FileDrop: React.FC<FileDropProps> = ({ onDrop }) => {
+const FileDrop: React.FC<FileDropProps> = ({ onDrop, clearPreviews }) => {
   const [previews, setPreviews] = useState<string[]>([]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -28,9 +29,12 @@ const FileDrop: React.FC<FileDropProps> = ({ onDrop }) => {
   });
 
   // 清理预览URL
-  React.useEffect(() => {
-    return () => previews.forEach(preview => URL.revokeObjectURL(preview));
-  }, [previews]);
+  const clearPreviewImages = () => {
+    setPreviews([]);
+    if (clearPreviews) {
+      clearPreviews();
+    }
+  };
 
   return (
     <div {...getRootProps()} style={{ border: '2px dashed #007bff', padding: '20px', textAlign: 'center' }}>
@@ -47,6 +51,5 @@ const FileDrop: React.FC<FileDropProps> = ({ onDrop }) => {
     </div>
   );
 };
-
 
 export default FileDrop;

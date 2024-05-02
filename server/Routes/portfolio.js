@@ -3,6 +3,8 @@ const router = express.Router();
 const Portfolio = require('../models/portfolio'); // 确保路径正确
 const Statistic = require('../models/Statistic'); 
 const { incrementPublishCount } = require('../utils/statisticHelpers');
+const multer = require('multer');
+const upload = multer();
 
 // 添加新项目的路由处理器
 router.post('/add', async (req, res) => {
@@ -99,10 +101,9 @@ router.post('/:id/like', async (req, res) => {
 
 router.put('/update/:id', async (req, res) => {
   const { id } = req.params;
-  const updateData = req.body;
+  const updateData = req.body;  // 确保前端发送的是整个项目数据
 
   try {
-    // 查找并更新项目，返回更新后的文档
     const updatedProject = await Portfolio.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
     if (!updatedProject) {
       return res.status(404).json({ message: "Portfolio not found" });
@@ -110,11 +111,7 @@ router.put('/update/:id', async (req, res) => {
     res.json({ message: "Project updated successfully", project: updatedProject });
   } catch (error) {
     console.error('Error updating project:', error);
-    if (error.name === 'ValidationError') {
-      res.status(400).json({ error: "Validation Error", details: error.message });
-    } else {
-      res.status(500).json({ error: "Server error", details: error.message });
-    }
+    res.status(500).json({ error: "Server error", details: error.message });
   }
 });
 

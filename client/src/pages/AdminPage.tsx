@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import axiosInstance from '../axios.config';  // Ensure the path is correct
+import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
+import axiosInstance from '../axios.config';
 import FileDrop from '../components/FileDrop';
-import PortfolioList from '../AdminComponents/PortfolioList';
 
 interface PortfolioData {
-  category: string;
+  _id?: string;
   title: string;
+  category: string;
+  imageUrls: string[];
   description: string;
   technologies: string[];
   startDate: string;
@@ -13,112 +14,124 @@ interface PortfolioData {
   role: string;
   githubUrl: string;
   liveDemoUrl: string;
-  imageFiles: File[];
-}
-
-interface LifeData {
-  category: string;
-  name: string;
-  quote: string;
-  images: File[];
 }
 
 const AdminPage = () => {
-  const [mode, setMode] = useState('portfolio');  // Toggle between 'portfolio' or 'life'
+  const [mode, setMode] = useState<'portfolio' | 'life'>('portfolio');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>('');
 
-  const [portfolioData, setPortfolioData] = useState<PortfolioData>({
-    category: '',
-    title: '',
-    description: '',
-    technologies: [],
-    startDate: '',
-    endDate: '',
-    role: '',
-    githubUrl: '',
-    liveDemoUrl: '',
-    imageFiles: []
-  });
+  const [portfolios, setPortfolios] = useState<PortfolioData[]>([]);
+  const [editingPortfolio, setEditingPortfolio] = useState<PortfolioData | null>(null);
+  const [newFiles, setNewFiles] = useState<File[]>([]);
+  const [isCreating, setIsCreating] = useState(false); // Track if creating new portfolio
 
-  const [lifeData, setLifeData] = useState<LifeData>({
-    category: '',
-    name: '',
-    quote: '',
-    images: []
-  });
-
-  const handlePortfolioChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    if (name === 'technologies') {
-      setPortfolioData({ ...portfolioData, [name]: value.split(',') });  // Splitting technologies by commas
-    } else {
-      setPortfolioData({ ...portfolioData, [name]: value });
+  const fetchPortfolios = async () => {
+    try {
+      const response = await axiosInstance.get<PortfolioData[]>('/portfolio/all');
+      setPortfolios(response.data);
+    } catch (error) {
+      setError('Failed to fetch portfolios');
     }
   };
 
-  const handleLifeChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setLifeData({ ...lifeData, [name]: value });
+  useEffect(() => {
+    fetchPortfolios();
+  }, []);
+
+  const handleEditChange = (field: keyof PortfolioData, value: string) => {
+    if (editingPortfolio) {
+      const updatedValue = field === 'technologies' ? value.split(',').map(tech => tech.trim()) : value;
+      setEditingPortfolio(prev => ({ ...prev!, [field]: updatedValue }));
+    }
+  };
+  
+  const handleNewFileChange = (files: File[]) => {
+    setNewFiles(files);
   };
 
-  const handleUpload = async (files: File[]): Promise<string[]> => {
+  const handleRemoveImage = (index: number) => {
+    if (editingPortfolio && editingPortfolio.imageUrls) {
+      const updatedImageUrls = editingPortfolio.imageUrls.filter((_, idx) => idx !== index);
+      setEditingPortfolio({ ...editingPortfolio, imageUrls: updatedImageUrls });
+    }
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setLoading(true);
-    const formData = new FormData();
-    files.forEach(file => {
-      formData.append('files', file, file.name);  // 'files' needs to match server expectation
-    });
 
     try {
-      const response = await axiosInstance.post(`/upload/${mode}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      return response.data.fileUrls;
+      let updatedImageUrls: string[] = editingPortfolio ? [...editingPortfolio.imageUrls] : [];
+
+      if (newFiles.length > 0) {
+        const formData = new FormData();
+        newFiles.forEach(file => {
+          formData.append('files', file, file.name);
+        });
+
+        const uploadResponse = await axiosInstance.post('/upload/portfolio', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        if (uploadResponse.data.fileUrls) {
+          updatedImageUrls = [...updatedImageUrls, ...uploadResponse.data.fileUrls];
+        }
+      }
+
+      const updatedPortfolioData = {
+        ...editingPortfolio!,
+        imageUrls: updatedImageUrls,
+      };
+
+      if (editingPortfolio?._id) {
+        await axiosInstance.put(`/portfolio/update/${editingPortfolio._id}`, updatedPortfolioData);
+      } else {
+        await axiosInstance.post('/portfolio/add', updatedPortfolioData); // Use /add route for creating new portfolio
+      }
+
+      fetchPortfolios();
+      setEditingPortfolio(null);
+      setNewFiles([]);
+      setLoading(false);
+      setIsCreating(false);
     } catch (error) {
-      console.error('Upload error:', error);
-      setError(`Error uploading files: ${error instanceof Error ? error.message : "Unknown error"}`);
-      return Promise.reject(error);
-    } finally {
+      console.error('Error during file upload or project update:', error);
+      setError('Failed to update portfolio');
       setLoading(false);
     }
   };
 
-  const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const startEditing = (portfolio: PortfolioData) => {
+    setEditingPortfolio({ ...portfolio });
+    setNewFiles([]); // 清空新文件
+    setIsCreating(false);
+  };
+  
 
-    if (mode === 'portfolio') {
-      if (portfolioData.imageFiles.length === 0) {
-        setError("No images selected for upload");
-        return;
-      }
+  const startCreating = () => {
+    setEditingPortfolio({
+      title: '', 
+      category: '',
+      imageUrls: [],
+      description: '',
+      technologies: [],
+      startDate: '',
+      endDate: '',
+      role: '',
+      githubUrl: '',
+      liveDemoUrl: ''
+    });
+    setNewFiles([]);
+    setIsCreating(true);
+  };
 
-      try {
-        const imageUrls = await handleUpload(portfolioData.imageFiles);
-        const portfolioPayload = { ...portfolioData, imageUrls };
-        await axiosInstance.post('/portfolio/add', portfolioPayload);
-        alert('Portfolio project added successfully!');
-      } catch (error) {
-        console.error('Failed to submit portfolio:', error);
-        setError(`Failed to submit portfolio: ${error}`);
-      }
-    } else if (mode === 'life') {
-      if (lifeData.images.length === 0) {
-        setError("No images selected for upload");
-        return;
-      }
-
-      try {
-        const imageUrls = await handleUpload(lifeData.images);
-        const lifePayload = { ...lifeData, image: imageUrls[0] };  // Assuming single image submission
-        await axiosInstance.post('/life/add', lifePayload);
-        alert('Life event added successfully!');
-      } catch (error) {
-        console.error('Failed to submit life data:', error);
-        setError(`Failed to submit life data: ${error}`);
-      }
-    }
+  const handleCancel = () => {
+    setEditingPortfolio(null);
+    setNewFiles([]);
+    setIsCreating(false);
   };
 
   return (
@@ -129,37 +142,51 @@ const AdminPage = () => {
         <button onClick={() => setMode('life')}>Life Mode</button>
       </div>
 
-      <form onSubmit={submitForm}>
-        {mode === 'portfolio' ? (
-          <>
-            <input name="category" value={portfolioData.category} onChange={handlePortfolioChange} placeholder="Category" />
-            <input name="title" value={portfolioData.title} onChange={handlePortfolioChange} placeholder="Title" />
-            <textarea name="description" value={portfolioData.description} onChange={handlePortfolioChange} placeholder="Description" />
-            <input name="technologies" value={portfolioData.technologies.join(',')} onChange={handlePortfolioChange} placeholder="Technologies (comma-separated)" />
-            <input name="startDate" type="date" value={portfolioData.startDate} onChange={handlePortfolioChange} />
-            <input name="endDate" type="date" value={portfolioData.endDate} onChange={handlePortfolioChange} />
-            <input name="role" value={portfolioData.role} onChange={handlePortfolioChange} placeholder="Role" />
-            <input name="githubUrl" value={portfolioData.githubUrl} onChange={handlePortfolioChange} placeholder="GitHub URL" />
-            <input name="liveDemoUrl" value={portfolioData.liveDemoUrl} onChange={handlePortfolioChange} placeholder="Live Demo URL" />
-            <FileDrop onDrop={(acceptedFiles) => setPortfolioData(prev => ({ ...prev, imageFiles: acceptedFiles }))} />
-          </>
-        ) : (
-          <>
-            <input name="category" value={lifeData.category} onChange={handleLifeChange} placeholder="Category" />
-            <input name="name" value={lifeData.name} onChange={handleLifeChange} placeholder="Life Theme" />
-            <textarea name="quote" value={lifeData.quote} onChange={handleLifeChange} placeholder="Description" />
-            <FileDrop onDrop={(acceptedFiles) => setLifeData(prevData => ({
-              ...prevData,
-              images: [...prevData.images, ...acceptedFiles]
-            }))} />
-          </>
-        )}
-        <button type="submit">Submit</button>
-      </form>
+      <form onSubmit={handleSubmit}>
+  <input name="category" value={editingPortfolio?.category || ''} onChange={e => handleEditChange('category', e.target.value)} placeholder="Category" required />
+  <input type="text" value={editingPortfolio?.title || ''} onChange={e => handleEditChange('title', e.target.value)} placeholder="Title" required />
+  <textarea value={editingPortfolio?.description || ''} onChange={e => handleEditChange('description', e.target.value)} placeholder="Description" />
+  <input type="text" value={editingPortfolio?.technologies.join(', ') || ''} onChange={e => handleEditChange('technologies', e.target.value)} placeholder="Technologies (comma-separated)" />
+  <input type="date" value={editingPortfolio?.startDate || ''} onChange={e => handleEditChange('startDate', e.target.value)} placeholder="Start Date" />
+  <input type="date" value={editingPortfolio?.endDate || ''} onChange={e => handleEditChange('endDate', e.target.value)} placeholder="End Date" />
+  <input type="text" value={editingPortfolio?.role || ''} onChange={e => handleEditChange('role', e.target.value)} placeholder="Role" />
+  <input type="url" value={editingPortfolio?.githubUrl || ''} onChange={e => handleEditChange('githubUrl', e.target.value)} placeholder="GitHub URL" />
+  <input type="url" value={editingPortfolio?.liveDemoUrl || ''} onChange={e => handleEditChange('liveDemoUrl', e.target.value)} placeholder="Live Demo URL" />
+
+  <FileDrop onDrop={handleNewFileChange} />
+
+  {newFiles.map((file, index) => (
+    <div key={index}>
+      <p>{file.name}</p>
+    </div>
+  ))}
+
+  {editingPortfolio?.imageUrls.map((url, index) => (
+    <div key={index}>
+      <img src={url} alt={`Portfolio Image ${index}`} style={{ width: '100px', height: '100px' }} />
+      <button type="button" onClick={() => handleRemoveImage(index)}>Remove</button>
+    </div>
+  ))}
+
+  <button type="submit">{isCreating ? 'Create' : 'Save'}</button>
+  <button type="button" onClick={handleCancel}>Cancel</button>
+</form>
+
 
       {loading && <p>Loading...</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      <PortfolioList></PortfolioList>
+
+      <div>
+        <h1>Portfolio List</h1>
+        {portfolios.map((portfolio) => (
+          <div key={portfolio._id}>
+            <h3>{portfolio.title}</h3>
+            <p>{portfolio.description}</p>
+            <button onClick={() => startEditing(portfolio)}>Edit</button>
+          </div>
+        ))}
+        <button onClick={startCreating}>Create New Portfolio</button>
+      </div>
     </div>
   );
 };

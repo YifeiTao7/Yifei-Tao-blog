@@ -19,7 +19,7 @@ const PortfolioList = () => {
   const [portfolios, setPortfolios] = useState<PortfolioData[]>([]);
   const [editingPortfolio, setEditingPortfolio] = useState<PortfolioData | null>(null);
   const [error, setError] = useState<string>('');
-  const [file, setFile] = useState<File | null>(null); // For storing the uploaded file
+  const [newFile, setNewFile] = useState<File | null>(null);
 
   useEffect(() => {
     const fetchPortfolios = async () => {
@@ -30,70 +30,116 @@ const PortfolioList = () => {
         setError('Failed to fetch portfolios');
       }
     };
-
     fetchPortfolios();
   }, []);
 
   const handleEditChange = (field: keyof PortfolioData, value: string) => {
     if (editingPortfolio) {
-      setEditingPortfolio({ ...editingPortfolio, [field]: value });
+      const updatedValue = field === 'technologies' ? value.split(',').map(tech => tech.trim()) : value;
+      setEditingPortfolio({ ...editingPortfolio, [field]: updatedValue });
     }
   };
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleNewFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
-      setFile(event.target.files[0]);
+      setNewFile(event.target.files[0]);
     }
   };
 
-  const handleSubmit = async (event: FormEvent) => {
+  const handleRemoveImage = (index: number) => {
+    if (editingPortfolio && editingPortfolio.imageUrls) {
+      const updatedImageUrls = editingPortfolio.imageUrls.filter((_, idx) => idx !== index);
+      setEditingPortfolio({ ...editingPortfolio, imageUrls: updatedImageUrls });
+    }
+  };
+
+  const handleSubmit = async (event: { preventDefault: () => void; }) => {
     event.preventDefault();
     if (!editingPortfolio) return;
-
+  
     const formData = new FormData();
-    if (file) {
-      formData.append('image', file);
+    if (newFile) {
+      formData.append('files', newFile);
     }
-    formData.append('data', JSON.stringify(editingPortfolio));
-
+  
     try {
-      const response = await axiosInstance.put(`/portfolio/update/${editingPortfolio._id}`, formData, {
+      const uploadResponse = await axiosInstance.post('/upload/portfolio', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      setPortfolios(portfolios.map(p => p._id === editingPortfolio._id ? response.data : p));
-      setEditingPortfolio(null);
-      setFile(null);
+
+      if (uploadResponse.data.fileUrls) {
+        const updatedImageUrls = [...editingPortfolio.imageUrls, ...uploadResponse.data.fileUrls];
+        const updatedPortfolioData = {
+          ...editingPortfolio,
+          imageUrls: updatedImageUrls
+        };
+
+        const updateResponse = await axiosInstance.put(`/portfolio/update/${editingPortfolio._id}`, updatedPortfolioData);
+
+        if (updateResponse.status === 200) {
+          // 重新获取更新后的项目列表
+          fetchPortfolios(); // 调用已有的 fetchPortfolios 函数重新加载数据
+          setEditingPortfolio(null);
+          setNewFile(null);
+        }
+      }
     } catch (error) {
+      console.error('Error during file upload or project update:', error);
       setError('Failed to update portfolio');
     }
-  };
+};
+
+// fetchPortfolios 函数保持不变，确保它可以被 handleSubmit 调用
+const fetchPortfolios = async () => {
+    try {
+      const response = await axiosInstance.get<PortfolioData[]>('/portfolio/all');
+      setPortfolios(response.data);
+    } catch (error) {
+      setError('Failed to fetch portfolios');
+    }
+};
+
+  
 
   const startEditing = (portfolio: PortfolioData) => {
-    setEditingPortfolio(portfolio);
+    setEditingPortfolio({...portfolio}); // Copy the portfolio data to state
+    setNewFile(null); // Reset new file
   };
 
   const handleCancel = () => {
     setEditingPortfolio(null);
-    setFile(null);
+    setNewFile(null);
   };
 
   return (
     <div>
       <h1>Portfolio List</h1>
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      {portfolios.map(portfolio => (
+      {portfolios.map((portfolio) => (
         editingPortfolio?._id === portfolio._id ? (
           <form onSubmit={handleSubmit} key={portfolio._id}>
-            <input type="text" value={editingPortfolio.title} onChange={e => handleEditChange('title', e.target.value)} required />
-            <input type="text" value={editingPortfolio.role} onChange={e => handleEditChange('role', e.target.value)} />
-            <input type="url" value={editingPortfolio.githubUrl} onChange={e => handleEditChange('githubUrl', e.target.value)} />
-            <input type="url" value={editingPortfolio.liveDemoUrl} onChange={e => handleEditChange('liveDemoUrl', e.target.value)} />
-            <textarea value={editingPortfolio.description} onChange={e => handleEditChange('description', e.target.value)} />
-            <input type="text" value={editingPortfolio.technologies.join(',')} onChange={e => handleEditChange('technologies', e.target.value)} />
-            <input type="file" onChange={handleFileChange} />
-            {file && <img src={URL.createObjectURL(file)} alt="Preview" style={{ width: 100, height: 100 }} />}
+            <input type="text" value={editingPortfolio.title || ''} onChange={e => handleEditChange('title', e.target.value)} required />
+            <input type="text" value={editingPortfolio.category || ''} onChange={e => handleEditChange('category', e.target.value)} />
+            <textarea value={editingPortfolio.description || ''} onChange={e => handleEditChange('description', e.target.value)} />
+            <input type="text" value={editingPortfolio.technologies.join(', ') || ''} onChange={e => handleEditChange('technologies', e.target.value)} />
+            <input type="date" value={editingPortfolio.startDate ? new Date(editingPortfolio.startDate).toISOString().slice(0, 10) : ''} onChange={e => handleEditChange('startDate', e.target.value)} />
+            <input type="date" value={editingPortfolio.endDate ? new Date(editingPortfolio.endDate).toISOString().slice(0, 10) : ''} onChange={e => handleEditChange('endDate', e.target.value)} />
+            <input type="text" value={editingPortfolio.role || ''} onChange={e => handleEditChange('role', e.target.value)} />
+            <input type="url" value={editingPortfolio.githubUrl || ''} onChange={e => handleEditChange('githubUrl', e.target.value)} />
+            <input type="url" value={editingPortfolio.liveDemoUrl || ''} onChange={e => handleEditChange('liveDemoUrl', e.target.value)} />
+
+            <input type="file" onChange={handleNewFileChange} />
+            {newFile && (
+              <img src={URL.createObjectURL(newFile)} alt="New File Preview" style={{ width: '100px', height: '100px' }} onLoad={() => URL.revokeObjectURL(URL.createObjectURL(newFile))} />
+            )}
+            {editingPortfolio.imageUrls.map((url, index) => (
+              <div key={index}>
+                <img src={url} alt={`Portfolio Image ${index}`} style={{ width: '100px', height: '100px' }} />
+                <button type="button" onClick={() => handleRemoveImage(index)}>Remove</button>
+              </div>
+            ))}
             <button type="submit">Save</button>
             <button type="button" onClick={handleCancel}>Cancel</button>
           </form>
