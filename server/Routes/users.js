@@ -4,10 +4,9 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const path = require('path');
-const User = require('../models/User');  // 确保路径正确
+const User = require('../models/user');
 const router = express.Router();
 
-// 配置 multer 存储
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
     const uploadDir = path.join(__dirname, '..', '..', 'client', 'public', 'assets', 'img', 'avatar');
@@ -21,7 +20,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-const Statistic = require('../models/Statistic'); // 引入统计数据模型
+const Statistic = require('../models/Statistic');
 
 router.post('/register', upload.single('avatar'), async (req, res) => {
   const { username, email, password } = req.body;
@@ -42,18 +41,13 @@ router.post('/register', upload.single('avatar'), async (req, res) => {
     });
 
     const savedUser = await newUser.save();
-
-    // 更新用户统计
-    await updateStatistic("Active Users", 1); // 假设这个函数逻辑正确处理增加用户数量
-
-    // 创建 token
+    await updateStatistic("Active Users", 1);
     const token = jwt.sign(
       { userId: savedUser._id, email: savedUser.email },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
 
-    // 返回 token 和用户信息
     res.status(201).json({
       message: "User registered successfully",
       token,
@@ -61,7 +55,6 @@ router.post('/register', upload.single('avatar'), async (req, res) => {
       avatar: savedUser.avatar
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: "Error registering new user" });
   }
 });
@@ -70,11 +63,10 @@ async function updateStatistic(title, increment) {
   const statistic = await Statistic.findOneAndUpdate(
     { title: title },
     { $inc: { count: increment } },
-    { new: true, upsert: true } // 创建统计项如果不存在
+    { new: true, upsert: true }
   );
 }
 
-// 用户登录
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -102,7 +94,6 @@ router.post('/login', async (req, res) => {
       avatar: user.avatar
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: "Error logging in" });
   }
 });

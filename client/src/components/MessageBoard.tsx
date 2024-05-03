@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import axiosInstance from '../axios.config';
 import { useAuth } from '../context/AuthContext';
 import AuthModalButton from './AuthModalButton';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface Message {
   _id: string;
@@ -38,7 +40,7 @@ const MessageBoard: React.FC<MessageBoardProps> = ({ projectId }) => {
       const response = await axiosInstance.get<Message[]>(`/${projectId}`);
       setMessages(response.data);
     } catch (error) {
-      console.error('Error fetching messages:', error);
+      toast.error('Failed to fetch messages');
     }
   };
 
@@ -56,18 +58,18 @@ const MessageBoard: React.FC<MessageBoardProps> = ({ projectId }) => {
       const updatedFormData = { 
         ...formData,
         username: user.username,
-        avatarUrl: user.avatar || 'default-avatar.png'  // 使用用户头像或默认头像
+        avatarUrl: user.avatar || 'default-avatar.png'
       };
       try {
         await axiosInstance.post(`/submit/${projectId}`, updatedFormData);
-        alert('Your message has been submitted successfully. Thank you!');
+        toast.success('Your message has been submitted successfully. Thank you!');
         fetchMessages();
+        setFormData({ message: '' });
       } catch (error) {
-        console.error('Error submitting message:', error);
-        alert('There was a problem submitting your message.');
+        toast.error('Failed to submit message');
       }
     } else {
-      alert('Please login to leave a message.');
+      toast.error('Please login to leave a message.');
     }
   };
   
@@ -99,9 +101,9 @@ const MessageBoard: React.FC<MessageBoardProps> = ({ projectId }) => {
           <p> to leave a message.</p>
         </div>
       )}
+      <ToastContainer />
     </div>
   );
-  
 }
 
 export default MessageBoard;

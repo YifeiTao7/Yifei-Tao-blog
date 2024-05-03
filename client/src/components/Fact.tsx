@@ -13,13 +13,12 @@ const Facts = () => {
   const [facts, setFacts] = useState<Fact[]>([]);
   const [counts, setCounts] = useState<{ [key: number]: number }>({});
 
-  // 动画计数效果初始化函数
   const initializeCounts = (facts: Fact[]) => {
     facts.forEach((fact, index) => {
       let start = 0;
       const end = fact.count;
-      const duration = 2000; // 动画持续时间，单位为毫秒
-      const incrementTime = (duration / end) * Math.random(); // 计算每次增加的时间间隔
+      const duration = 2000;
+      const incrementTime = (duration / end) * Math.random();
 
       const interval = setInterval(() => {
         start += 1;
@@ -29,11 +28,11 @@ const Facts = () => {
     });
   };
 
-  // 获取统计数据
+
   useEffect(() => {
     const fetchFacts = async () => {
       try {
-        const response = await axiosInstance.get('/statistics'); // 使用axios实例发送GET请求
+        const response = await axiosInstance.get('/statistics');
         setFacts(response.data);
         initializeCounts(response.data);
       } catch (error) {

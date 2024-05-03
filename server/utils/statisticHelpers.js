@@ -16,7 +16,6 @@ async function incrementPublishCount() {
             await newStat.save();
         }
     } catch (error) {
-        console.error('Failed to increment publish count:', error);
     }
 }
 

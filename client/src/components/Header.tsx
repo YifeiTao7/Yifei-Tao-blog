@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link as ScrollLink } from 'react-scroll';
-import { Link } from 'react-router-dom'; // Ensure React Router's Link is imported
-import 'boxicons/css/boxicons.min.css';
-import { useAuth } from '../context/AuthContext'; // Ensure path is correct
-import AuthModalButton from './AuthModalButton'; // Adjust the import path as necessary
+import { useAuth } from '../context/AuthContext';
 
 const Header = () => {
   const [isActive, setIsActive] = useState(false);
   const [navBarActiveClass, setNavBarActiveClass] = useState('');
-  const { user } = useAuth(); // useAuth hook to access user details
+  const { user } = useAuth();
 
   const toggleMobileNav = () => {
     setIsActive(!isActive);

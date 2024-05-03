@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Accept, useDropzone } from 'react-dropzone';
 
 interface FileDropProps {
-  onDrop: (acceptedFiles: File[]) => void;  // This prop is called when files are accepted
-  clearPreviews?: () => void; // Make clearPreviews optional
+  onDrop: (acceptedFiles: File[]) => void;
+  clearPreviews?: () => void;
 }
 
 const FileDrop: React.FC<FileDropProps> = ({ onDrop, clearPreviews }) => {
@@ -11,24 +11,18 @@ const FileDrop: React.FC<FileDropProps> = ({ onDrop, clearPreviews }) => {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: (acceptedFiles) => {
-      // 为新接收的文件创建预览URLs
       const newFiles = acceptedFiles.map(file => ({
         ...file,
         preview: URL.createObjectURL(file)
       }));
-
-      // 将新文件的预览URLs添加到现有列表中
       setPreviews(prev => [...prev, ...newFiles.map(file => file.preview)]);
-
-      // 将新文件添加到现有文件列表中，回调到父组件
-      onDrop([...acceptedFiles]);  // 确保累加文件
+      onDrop([...acceptedFiles]);
     },
-    accept: 'image/*' as unknown as Accept,
+    accept: 'image/*,video/*' as unknown as Accept,
     maxSize: 10485760,
-    multiple: true  // 允许选择多个文件
+    multiple: true 
   });
 
-  // 清理预览URL
   const clearPreviewImages = () => {
     setPreviews([]);
     if (clearPreviews) {

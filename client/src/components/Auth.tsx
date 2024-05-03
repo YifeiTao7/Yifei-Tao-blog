@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext'; // 确保路径正确
+import { useAuth } from '../context/AuthContext';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface AuthProps {
   toggleModal: () => void;
@@ -9,26 +11,25 @@ interface FormData {
   username: string;
   email: string;
   password: string;
-  avatar: File | null; // avatar 现在可以是 File 或 null
+  avatar: File | null;
 }
 
 const Auth: React.FC<AuthProps> = ({ toggleModal }) => {
-  const { login, register, error } = useAuth(); // 使用 useAuth 钩子
+  const { login, register, error } = useAuth();
   const [isRegistering, setIsRegistering] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     username: '',
     email: '',
     password: '',
-    avatar: null, // 初始值是 null
+    avatar: null,
   });
 
-  // 处理输入字段变化，包括文件类型
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, type, value, files } = event.target;
+    const { name, value, files } = event.target;
     if (name === 'avatar' && files && files.length > 0) {
       setFormData((prevState) => ({
         ...prevState,
-        avatar: files[0], // 将文件存入 formData
+        avatar: files[0],
       }));
     } else {
       setFormData((prevState) => ({
@@ -38,7 +39,6 @@ const Auth: React.FC<AuthProps> = ({ toggleModal }) => {
     }
   };
 
-  // 处理表单提交
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData();
@@ -52,16 +52,16 @@ const Auth: React.FC<AuthProps> = ({ toggleModal }) => {
   
     try {
       if (isRegistering) {
-        // 确保 register 函数接受 FormData 类型
-        await register(data); 
+        await register(data);
+        toast.success('Registration successful!');
         toggleModal();
       } else {
-        // 适当修改 login 函数以接受对象，而非 FormData
         await login({ email: formData.email, password: formData.password });
+        toast.success('Login successful!');
         toggleModal();
       }
     } catch (error) {
-      console.error('Authentication error:', error);
+      toast.error('Authentication failed. Please try again.');
     }
   };
   
@@ -92,8 +92,8 @@ const Auth: React.FC<AuthProps> = ({ toggleModal }) => {
                 className="form-control"
                 id="avatar"
                 name="avatar"
-                accept="image/*" // 仅接受图片文件
-                onChange={handleChange} // 处理文件输入
+                accept="image/*" 
+                onChange={handleChange}
               />
             </div>
           </>
@@ -122,19 +122,19 @@ const Auth: React.FC<AuthProps> = ({ toggleModal }) => {
           />
         </div>
         <button type="submit" className="btn btn-primary button-spacing">
-  {isRegistering ? 'Register' : 'Login'}
-</button>
-<button
-  type="button"
-  className="btn btn-link"
-  onClick={() => {
-    setIsRegistering(!isRegistering);
-  }}
->
-  {isRegistering ? "Already have an account? Login" : "Don't have an account? Register"}
-</button>
-
+          {isRegistering ? 'Register' : 'Login'}
+        </button>
+        <button
+          type="button"
+          className="btn btn-link"
+          onClick={() => {
+            setIsRegistering(!isRegistering);
+          }}
+        >
+          {isRegistering ? "Already have an account? Login" : "Don't have an account? Register"}
+        </button>
       </form>
+      <ToastContainer />
     </div>
   );
 };

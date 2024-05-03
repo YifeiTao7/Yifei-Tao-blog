@@ -1,11 +1,9 @@
-// AuthModalButton.tsx
 import React, { useState } from 'react';
 import RegisterModal from './RegisterModal';
 import { useAuth } from '../context/AuthContext';
 
-// Define the type for the component's props
 interface AuthModalButtonProps {
-  isMessageBoard?: boolean; // This prop is optional
+  isMessageBoard?: boolean;
 }
 
 const AuthModalButton: React.FC<AuthModalButtonProps> = ({ isMessageBoard = false }) => {

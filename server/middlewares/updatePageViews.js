@@ -1,4 +1,4 @@
-const Statistic = require('../models/Statistic'); // 确保路径正确
+const Statistic = require('../models/Statistic');
 
 async function updatePageViews(req, res, next) {
     try {
@@ -7,7 +7,6 @@ async function updatePageViews(req, res, next) {
             pageViewsStat.count += 1;
             await pageViewsStat.save();
         } else {
-            // 如果没有找到相应的统计数据，就创建一个
             const newStat = new Statistic({
                 title: "Site Visits",
                 count: 1,
@@ -19,7 +18,7 @@ async function updatePageViews(req, res, next) {
     } catch (error) {
         console.error('Error updating page views:', error);
     }
-    next(); // 确保请求继续处理
+    next();
 }
 
 module.exports = updatePageViews;

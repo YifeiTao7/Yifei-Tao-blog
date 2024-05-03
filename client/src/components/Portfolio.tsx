@@ -1,18 +1,18 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import Isotope from 'isotope-layout';
 import GLightbox from 'glightbox';
 import 'glightbox/dist/css/glightbox.min.css';
 import 'aos/dist/aos.css';
 import AOS from 'aos';
 import PortfolioItem from './PortfolioItem';
-import axiosInstance from '../axios.config'; // 确保路径正确
+import axiosInstance from '../axios.config';
 
 interface Project {
-    _id: string; // MongoDB uses _id
-    category: string;  // 'personal', 'professional', 'school'
+    _id: string;
+    category: string;
     imageUrls: string[];
     title: string;
-    likes: number;  // 添加点赞数
+    likes: number;
 }
 
 const Portfolio = () => {
@@ -28,19 +28,14 @@ const Portfolio = () => {
                 setProjects(response.data);
                 setProjectsFetched(true);
             } catch (error) {
-                console.error('Error fetching projects:', error);
             }
         };
 
         fetchData();
         AOS.init({ duration: 1000, once: true });
-    
-        return () => {
-            // Clean up
-        };
     }, []);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (projectsFetched && isoRef.current) {
             isotope.current = new Isotope(isoRef.current, {
                 itemSelector: '.portfolio-item',
@@ -57,7 +52,7 @@ const Portfolio = () => {
                 lightbox.close();
             };
         }
-    }, [projectsFetched]);
+    }, [projectsFetched, isoRef.current]);
 
     useEffect(() => {
         if (projectsFetched && isotope.current) {
@@ -72,19 +67,18 @@ const Portfolio = () => {
             isotope.current.arrange({ filter: filterValue });
         }
     }, [filterKey]);
-    
+
     const handleLike = async (projectId: string) => {
         try {
             const response = await axiosInstance.post(`/portfolio/${projectId}/like`);
             const updatedProjects = projects.map(project => {
                 if (project._id === projectId) {
-                    return { ...project, likes: project.likes + 1 }; // Assuming the backend response includes the new number of likes
+                    return { ...project, likes: project.likes + 1 };
                 }
                 return project;
             });
             setProjects(updatedProjects);
         } catch (error) {
-            console.error('Error liking the project:', error);
         }
     };
 
@@ -99,9 +93,9 @@ const Portfolio = () => {
                     <div className="col-lg-12 d-flex justify-content-center">
                         <ul id="portfolio-flters">
                             <li className={filterKey === '*' ? 'filter-active' : ''} onClick={() => setFilterKey('*')}>All</li>
-                            <li className={filterKey === 'personal' ? 'filter-active' : ''} onClick={() => setFilterKey('filter-personal')}>Personal Projects</li>
-                            <li className={filterKey === 'professional' ? 'filter-active' : ''} onClick={() => setFilterKey('filter-professional')}>Professional Projects</li>
-                            <li className={filterKey === 'school' ? 'filter-active' : ''} onClick={() => setFilterKey('filter-school')}>School Projects</li>
+                            <li className={filterKey === 'personal' ? 'filter-active' : ''} onClick={() => setFilterKey('personal')}>Personal Projects</li>
+                            <li className={filterKey === 'professional' ? 'filter-active' : ''} onClick={() => setFilterKey('professional')}>Professional Projects</li>
+                            <li className={filterKey === 'school' ? 'filter-active' : ''} onClick={() => setFilterKey('school')}>School Projects</li>
                         </ul>
                     </div>
                 </div>

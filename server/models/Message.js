@@ -9,9 +9,9 @@ const messageSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  avatarUrl: {       // 添加头像URL字段
+  avatarUrl: {
     type: String,
-    required: false  // 标记为非必需，因为可能存在未设置头像的用户
+    required: false
   },
   message: {
     type: String,

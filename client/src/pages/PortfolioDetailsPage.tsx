@@ -53,7 +53,6 @@ const PortfolioDetailsPage = () => {
 
   return (
     <main id="main">
-      {/* Breadcrumbs Section */}
       <section id="breadcrumbs" className="breadcrumbs">
         <div className="container">
           <div className="d-flex justify-content-between align-items-center">
@@ -65,12 +64,8 @@ const PortfolioDetailsPage = () => {
           </div>
         </div>
       </section>
-      {/* End Breadcrumbs Section */}
-
-      {/* Portfolio Details Section */}
       <section id="portfolio-details" className="portfolio-details">
         <div className="container">
-          {/* Bootstrap Carousel */}
           <div id="portfolioCarousel" className="carousel slide" data-bs-ride="carousel">
             <div className="carousel-inner">
               {portfolioItem.imageUrls.map((url, index) => (
@@ -115,7 +110,6 @@ const PortfolioDetailsPage = () => {
           </div>
         </div>
       </section>
-      {/* End Portfolio Details Section */}
     </main>
   );
 };

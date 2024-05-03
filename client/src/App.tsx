@@ -23,6 +23,7 @@ import PortfolioDetails from './pages/PortfolioDetailsPage';
 
 
 
+
 const AppContent = () => {
   const location = useLocation();
 

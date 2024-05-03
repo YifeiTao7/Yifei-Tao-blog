@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const Statistic = require('../models/Statistic');
 
-// 获取所有统计数据
+
 router.get('/', async (req, res) => {
   try {
     const statistics = await Statistic.find();
@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// 创建新的统计数据
+
 router.post('/', async (req, res) => {
   const { title, count, description, icon } = req.body;
   const statistic = new Statistic({
@@ -31,7 +31,6 @@ router.post('/', async (req, res) => {
   }
 });
 
-// 更新统计数据，通过 title 字段识别
 router.put('/update-by-title', async (req, res) => {
   const { title, count } = req.body;
   try {
@@ -39,8 +38,6 @@ router.put('/update-by-title', async (req, res) => {
     if (!statistic) {
       return res.status(404).json({ message: "Statistic not found" });
     }
-
-    // 更新统计数据的数量
     statistic.count = count;
     const updatedStatistic = await statistic.save();
 

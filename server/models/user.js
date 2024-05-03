@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  avatar: {   // 新增头像字段
+  avatar: {
     type: String,
     default: ''
   },

@@ -6,28 +6,24 @@ import Slider from 'react-slick';
 interface LifeItem {
   _id: string;
   category: string;
-  image: string;
+  images: string[];
   name: string;
   quote: string;
 }
 
-type CategoryItems = {
-  [key: string]: LifeItem[];
-}
 interface ArrowButtonProps {
-  onClick?: () => void; // Add this line to define the onClick type
+  onClick?: () => void;
 }
 
-// Next Arrow Button
 const NextArrow: React.FC<ArrowButtonProps> = ({ onClick }) => (
   <button
     className="slick-next custom-slick-next"
     onClick={onClick}
     aria-label="Next"
-    style={{ fontSize: 0 }} // Removes font size to avoid unexpected display issues
+    style={{ fontSize: 0 }}
   >
     <svg
-      width="100%" // 这将使SVG充满按钮容器
+      width="100%"
       height="100%"
       viewBox="0 0 24 24" 
       fill="none"
@@ -41,16 +37,15 @@ const NextArrow: React.FC<ArrowButtonProps> = ({ onClick }) => (
   </button>
 );
 
-// Previous Arrow Button
 const PrevArrow: React.FC<ArrowButtonProps> = ({ onClick }) => (
   <button
     className="slick-prev custom-slick-prev"
     onClick={onClick}
     aria-label="Previous"
-    style={{ fontSize: 0 }} // Removes font size to avoid unexpected display issues
+    style={{ fontSize: 0 }}
   >
     <svg
-      width="100%" // 这将使SVG充满按钮容器
+      width="100%"
       height="100%"
       viewBox="0 0 24 24" 
       fill="none"
@@ -63,9 +58,6 @@ const PrevArrow: React.FC<ArrowButtonProps> = ({ onClick }) => (
     </svg>
   </button>
 );
-
-
-
 
 const Life: React.FC = () => {
   const [lifeItems, setLifeItems] = useState<LifeItem[]>([]);
@@ -82,12 +74,6 @@ const Life: React.FC = () => {
 
     fetchLifeItems();
   }, []);
-
-  const groupedByCategory = lifeItems.reduce((acc: CategoryItems, item) => {
-    acc[item.category] = acc[item.category] || [];
-    acc[item.category].push(item);
-    return acc;
-  }, {});
 
   const settings = {
     dots: true,
@@ -125,12 +111,12 @@ const Life: React.FC = () => {
           <p>Here is a record of my wonderful everyday life</p>
         </div>
         <Slider {...settings}>
-          {Object.entries(groupedByCategory).map(([category, items]) => (
-            <div key={category}>
-              <Link to={`/life/${category}`}>
-                <img src={items[0].image} alt={category} style={{ width: '100%' }} />
-                <h4>{category}</h4>
-                <p>{items[0].quote}</p>
+          {lifeItems.map((item) => (
+            <div key={item._id}>
+              <Link to={`/life/${item.category}`}>
+                <img src={item.images[0]} alt={item.category} style={{ width: '100%' }} />
+                <h4>{item.category}</h4>
+                <p>{item.quote}</p>
               </Link>
             </div>
           ))}

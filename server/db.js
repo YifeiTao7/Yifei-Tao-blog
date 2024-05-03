@@ -10,10 +10,8 @@ async function connectToServer(callback) {
   try {
     client = new MongoClient(uri);
     await client.connect();
-    console.log('Connected to MongoDB');
     callback();
   } catch (error) {
-    console.error('Error connecting to MongoDB:', error);
     process.exit(1);
   }
 }

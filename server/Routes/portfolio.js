@@ -1,23 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const Portfolio = require('../models/portfolio'); // 确保路径正确
+const Portfolio = require('../models/portfolio');
 const Statistic = require('../models/Statistic'); 
 const { incrementPublishCount } = require('../utils/statisticHelpers');
 const multer = require('multer');
 const upload = multer();
 
-// 添加新项目的路由处理器
+
 router.post('/add', async (req, res) => {
-  console.log('Add project endpoint called with body:', req.body); // 记录请求体内容
+  console.log('Add project endpoint called with body:', req.body);
 
   try {
-    // 创建新项目对象，包含所有必要的字段
     const project = new Portfolio({
       title: req.body.title,
       category: req.body.category,
-      imageUrls: req.body.imageUrls, // 注意这是一个数组
+      imageUrls: req.body.imageUrls,
       description: req.body.description,
-      technologies: req.body.technologies, // 这也可能是一个数组
+      technologies: req.body.technologies, 
       startDate: req.body.startDate,
       endDate: req.body.endDate,
       role: req.body.role,
@@ -25,30 +24,21 @@ router.post('/add', async (req, res) => {
       liveDemoUrl: req.body.liveDemoUrl
     });
 
-    // 保存项目到数据库
+
     await project.save();
     await incrementPublishCount();
-
-    // 发送成功响应
     res.status(201).json({ message: 'Project added successfully', projectId: project._id });
   } catch (error) {
-    console.error('Error adding project:', error); // 记录异常的日志
     res.status(500).json({ error: 'Server error', details: error.message });
   }
 });
 
 
-// 获取所有项目的路由处理器
 router.get('/all', async (req, res) => {
   try {
-    // 从数据库中获取所有项目
     const projects = await Portfolio.find();
-    console.log('Retrieved all projects:', projects); // 记录成功获取所有项目的日志
-
-    // 发送成功响应并返回所有项目
     res.status(200).json(projects);
   } catch (error) {
-    console.error('Error retrieving projects:', error); // 记录异常的日志
     res.status(500).send('Server error');
   }
 });
@@ -56,18 +46,15 @@ router.get('/all', async (req, res) => {
 router.get('/:title', async (req, res) => {
   try {
     const title = req.params.title;
-    const projects = await Portfolio.find({ title: title }); // 根据类别查询
-    console.log('Retrieved projects by title:', projects); // 记录查询结果
-    res.json(projects); // 返回符合该类别的所有数据
+    const projects = await Portfolio.find({ title: title });
+    res.json(projects);
   } catch (err) {
-    console.error('Error retrieving projects by title:', err); // 记录错误信息
-    res.status(500).json({ message: err.message }); // 返回错误状态和消息
+    res.status(500).json({ message: err.message });
   }
 });
 
 router.post('/:id/like', async (req, res) => {
   try {
-    // Increment likes for the specified project
     const portfolio = await Portfolio.findByIdAndUpdate(req.params.id, {
       $inc: { likes: 1 }
     }, { new: true });
@@ -75,14 +62,11 @@ router.post('/:id/like', async (req, res) => {
     if (!portfolio) {
       return res.status(404).send('Portfolio not found');
     }
-
-    // Update the total likes statistic
     const totalLikesStat = await Statistic.findOne({ title: "Likes" });
     if (totalLikesStat) {
-      totalLikesStat.count += 1; // Increment the count
+      totalLikesStat.count += 1;
       await totalLikesStat.save();
     } else {
-      // If no statistic found, possibly create a new one
       const newStat = new Statistic({
         title: "Likes",
         count: 1,
@@ -94,14 +78,13 @@ router.post('/:id/like', async (req, res) => {
 
     res.json({ portfolio: portfolio, totalLikes: totalLikesStat ? totalLikesStat.count : 1 });
   } catch (error) {
-    console.error('Error updating likes:', error);
     res.status(500).json({ message: "Error updating likes" });
   }
 });
 
 router.put('/update/:id', async (req, res) => {
   const { id } = req.params;
-  const updateData = req.body;  // 确保前端发送的是整个项目数据
+  const updateData = req.body;
 
   try {
     const updatedProject = await Portfolio.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
@@ -110,8 +93,21 @@ router.put('/update/:id', async (req, res) => {
     }
     res.json({ message: "Project updated successfully", project: updatedProject });
   } catch (error) {
-    console.error('Error updating project:', error);
     res.status(500).json({ error: "Server error", details: error.message });
+  }
+});
+router.delete('/delete/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const project = await Portfolio.findByIdAndDelete(id);
+    if (!project) {
+      return res.status(404).json({ message: 'Portfolio not found' });
+    }
+    await incrementPublishCount(-1);
+
+    res.status(200).json({ message: 'Project deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error', details: error.message });
   }
 });
 

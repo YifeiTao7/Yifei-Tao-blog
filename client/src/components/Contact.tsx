@@ -1,5 +1,3 @@
-import React, { useState } from 'react';
-import axiosInstance from '../axios.config';
 import MessageBoard from './MessageBoard';
 
 function Contact() {
@@ -9,7 +7,6 @@ function Contact() {
       <div className="container">
         <div className="section-title">
           <h2>Contact</h2>
-          <p>Magnam dolores commodi suscipit...</p>
         </div>
         <div className="row" data-aos="fade-in">
           <div className="col-lg-5 d-flex align-items-stretch">

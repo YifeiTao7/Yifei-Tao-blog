@@ -1,5 +1,5 @@
 import React from 'react';
-import Auth from './Auth'; // 确保路径正确
+import Auth from './Auth';
 
 interface RegisterModalProps {
   show: boolean;

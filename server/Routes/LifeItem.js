@@ -1,45 +1,72 @@
 const express = require('express');
-const LifeItem = require('../models/LifeItem'); // 确保这个路径匹配你的模型文件位置
+const LifeItem = require('../models/LifeItem');
 const router = express.Router();
 const { incrementPublishCount } = require('../utils/statisticHelpers');
-// 获取所有生活片段
+
+
 router.get('/', async (req, res) => {
   try {
-    const items = await LifeItem.find(); // 使用 mongoose 的 find 方法来获取所有文档
-    res.json(items); // 返回查询到的数据
+    const items = await LifeItem.find();
+    res.json(items);
   } catch (err) {
-    res.status(500).json({ message: err.message }); // 处理可能出现的错误
+    res.status(500).json({ message: err.message });
   }
 });
 
-// 获取特定类别的生活片段
+
 router.get('/category/:category', async (req, res) => {
   try {
     const category = req.params.category;
-    const items = await LifeItem.find({ category: category }); // 根据类别查询
-    res.json(items); // 返回符合该类别的所有数据
+    const items = await LifeItem.find({ category: category });
+    res.json(items);
   } catch (err) {
-    res.status(500).json({ message: err.message }); // 错误处理
+    res.status(500).json({ message: err.message });
   }
 });
 
-// 创建一个新的生活片段
 router.post('/add', async (req, res) => {
   const item = new LifeItem({
-    image: req.body.image,
+    images: req.body.images,
     name: req.body.name,
     quote: req.body.quote,
-    category: req.body.category // 确保在创建时传入类别
+    category: req.body.category
   });
 
   try {
-    const newItem = await item.save(); // 保存新创建的 LifeItem 实例到数据库
+    const newItem = await item.save();
     await incrementPublishCount();
-    res.status(201).json(newItem); // 返回成功状态码和新创建的项目
+    res.status(201).json(newItem);
   } catch (err) {
-    res.status(400).json({ message: err.message }); // 处理错误，比如模型验证失败
+    res.status(400).json({ message: err.message });
   }
 });
 
-// 导出 router 以便可以在其他文件如 app.js 中使用
+router.put('/update/:id', async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const updatedItem = await LifeItem.findByIdAndUpdate(id, {
+      ...req.body,
+      images: req.body.images
+    }, { new: true });
+
+    res.json(updatedItem);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+router.delete('/delete/:id', async (req, res) => {
+  try {
+    const deletedItem = await LifeItem.findByIdAndDelete(req.params.id);
+    if (!deletedItem) {
+      return res.status(404).json({ message: 'Item not found' });
+    }
+    res.status(200).json({ message: 'Item deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
 module.exports = router;

@@ -3,15 +3,15 @@ const mongoose = require('mongoose');
 const portfolioSchema = new mongoose.Schema({
   title: { type: String, required: true },
   category: { type: String, required: true },
-  imageUrls: [{ type: String, required: true }], // 存储项目封面和截图的图像 URL 数组
+  imageUrls: [{ type: String, required: true }],
   description: { type: String, required: true },
-  technologies: [String], // 使用的技术栈或工具的字符串数组
+  technologies: [String],
   startDate: Date,
   endDate: Date,
   role: String,
   githubUrl: String,
   liveDemoUrl: String,
-  likes: { type: Number, default: 0 } // 点赞数，默认为0
+  likes: { type: Number, default: 0 }
 });
 
 const Portfolio = mongoose.model('Portfolio', portfolioSchema);

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import Typed from 'typed.js';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; // 确保路径正确
+import { useAuth } from '../context/AuthContext';
 import AuthModalButton from './AuthModalButton';
 
 const Hero = () => {
@@ -28,8 +28,6 @@ const Hero = () => {
   useEffect(() => {
     console.log('Current user:', user);
   }, [user]);
-  {console.log("User object:", user)}
-  {console.log("User email:", user ? user.email : "No user")}
   
   return (
     <section
@@ -43,7 +41,7 @@ const Hero = () => {
         <AuthModalButton isMessageBoard={false} />
         {user && (
           <img
-            src={user.avatar || '/default-avatar.png'} // Use default avatar if none is provided
+            src={user.avatar || '/default-avatar.png'}
             alt="User Avatar"
             className="user-avatar"
             style={{ width: 50, height: 50, borderRadius: '50%' }}
