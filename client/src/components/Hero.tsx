@@ -26,7 +26,6 @@ const Hero = () => {
   }, []);
 
   useEffect(() => {
-    console.log('Current user:', user);
   }, [user]);
   
   return (
@@ -38,7 +37,7 @@ const Hero = () => {
       <div className="hero-container" data-aos="fade-in">
         <h1>I'm Felix Tao</h1>
         <p><span className="typed"></span></p>
-        <AuthModalButton isMessageBoard={false} />
+        <AuthModalButton />
         {user && (
           <img
             src={user.avatar || '/default-avatar.png'}

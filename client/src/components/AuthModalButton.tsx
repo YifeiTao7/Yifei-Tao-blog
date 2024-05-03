@@ -2,29 +2,27 @@ import React, { useState } from 'react';
 import RegisterModal from './RegisterModal';
 import { useAuth } from '../context/AuthContext';
 
-interface AuthModalButtonProps {
-  isMessageBoard?: boolean;
-}
-
-const AuthModalButton: React.FC<AuthModalButtonProps> = ({ isMessageBoard = false }) => {
+const AuthModalButton: React.FC = () => {
   const { user, logout } = useAuth();
   const [showModal, setShowModal] = useState(false);
 
-  const toggleModal = () => setShowModal(!showModal);
-
-  const btnClass = isMessageBoard ? "btn-register-message-board" : "btn-register";
+  const toggleModal = () => setShowModal(prev => !prev);
 
   return (
     <>
       {user ? (
         <div className="user-info">
           <span className="user-name">{user.username}</span>
-          <button onClick={logout} className="logout-btn">Logout</button>
+          <button className="logout-btn" onClick={logout}>
+            Logout
+          </button>
         </div>
       ) : (
-        <button onClick={toggleModal} className={`btn ${btnClass}`}>Login / Register</button>
+        <button className="btn btn-register" onClick={toggleModal}>
+          Login / Register
+        </button>
       )}
-      <RegisterModal show={showModal} toggleModal={toggleModal} />
+      {showModal && <RegisterModal show={showModal} toggleModal={toggleModal} />}
     </>
   );
 };

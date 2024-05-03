@@ -43,13 +43,11 @@ h6 {
   margin: 20px;
 }
 
-/* 单个消息样式 */
 .message-box {
   padding: 10px;
   border-bottom: 1px solid #eee;
 }
 
-/* 表单样式 */
 .message-form {
   display: flex;
   flex-direction: column;
@@ -57,7 +55,6 @@ h6 {
   margin-top: 20px;
 }
 
-/* 文本区域样式 */
 .message-textarea {
   padding: 10px;
   border-radius: 4px;
@@ -65,7 +62,6 @@ h6 {
   resize: none;
 }
 
-/* 发送按钮样式 */
 .send-button {
   padding: 10px 20px;
   border-radius: 4px;
@@ -76,7 +72,6 @@ h6 {
   transition: background-color 0.3s;
 }
 
-/* 认证消息样式 */
 .auth-message {
   display: flex;
   justify-content: center;
@@ -85,49 +80,47 @@ h6 {
 }
 
 .message-board-container {
-  max-width: 800px; /* Adjust based on your layout needs */
+  max-width: 800px;
   margin: 0 auto;
   padding: 20px;
 }
 
 .message-box {
-  background-color: #f4f4f8; /* Light grey background */
-  border-radius: 12px; /* Rounded corners for the bubble look */
+  background-color: #f4f4f8;
+  border-radius: 12px; 
   margin-bottom: 10px;
   padding: 10px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
 }
 
 .message-header {
   display: flex;
-  align-items: center; /* Aligns items vertically */
-  justify-content: space-between; /* Pushes the date to the right */
+  align-items: center; 
+  justify-content: space-between; 
   margin-bottom: 8px;
 }
 
 .avatar {
-  width: 40px; /* Fixed size for avatars */
+  width: 40px; 
   height: 40px;
-  border-radius: 50%; /* Circular avatars */
-  margin-right: 10px; /* Space between avatar and username */
+  border-radius: 50%; 
+  margin-right: 10px; 
 }
 
 .username {
-  flex-grow: 1; /* Allows the username to fill the space */
-  margin: 0; /* Removes default margin */
+  flex-grow: 1; 
+  margin: 0; 
 }
 
 .date {
-  white-space: nowrap; /* Keeps the date on one line */
-  opacity: 0.6; /* Diminishes the visual impact of the date */
+  white-space: nowrap; 
+  opacity: 0.6; 
 }
 
 .message-content {
-  font-size: 16px; /* Readable font size */
-  line-height: 1.4; /* Slightly increased line-height for readability */
+  font-size: 16px;
+  line-height: 1.4; 
 }
-
-/* Styles for form and authentication message omitted for brevity */
 
 
 /*--------------------------------------------------------------
@@ -196,53 +189,48 @@ h6 {
 # register button
 --------------------------------------------------------------*/
 .btn-register {
-  background-color: #37b3ed; /* 按钮背景颜色，稍亮的蓝色以吸引注意 */
-  color: white; /* 文字颜色 */
-  border: none; /* 不显示边框 */
-  padding: 10px 20px; /* 内边距 */
-  font-family: "Raleway", sans-serif; /* 字体样式 */
-  font-size: 16px; /* 字体大小 */
-  text-transform: uppercase; /* 文字大写 */
-  border-radius: 50px; /* 圆角边框 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 简单的阴影效果 */
-  transition: all 0.3s ease; /* 平滑过渡效果 */
-  cursor: pointer; /* 鼠标样式 */
-  position: absolute; /* 绝对定位 */
-  z-index: 5; /* 足够的 z-index 以确保在其他内容上方 */
+  background-color: #37b3ed; 
+  color: white; 
+  border: none; 
+  padding: 10px 20px;
+  font-family: "Raleway", sans-serif;
+  font-size: 16px;
+  text-transform: uppercase; 
+  border-radius: 50px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: absolute; 
+  z-index: 5;
   top: 520px;
 }
 
 .btn-register:hover, .btn-register:focus {
-  background-color: #149ddd; /* 鼠标悬停或聚焦时的背景颜色 */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* 悬停时更大的阴影效果 */
-  transform: translateY(-2px); /* 按钮向上移动的小效果 */
+  background-color: #149ddd; 
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); 
+  transform: translateY(-2px);
 }
 .btn-register-message-board {
-  /* Positioning and alignment */
-  position: relative; /* Adjust if you need a different positioning context */
-  margin: 0; /* Reset any default margins */
-  align-self: center; /* For aligning flex items in the current line of the flex container */
-  
-  /* Visual styling for interactivity */
-  background-color: #37b3ed; /* A noticeable color indicating interactivity */
-  color: white; /* Contrast text color for readability */
-  border: 2px solid transparent; /* Reset border or set to transparent for a clickable look */
-  padding: 10px 20px; /* Spacing inside the button */
-  border-radius: 5px; /* Rounded corners for a modern look */
-  transition: background-color 0.3s, border-color 0.3s; /* Smooth transition for hover effect */
-
-  /* Additional styling to indicate it's a button */
-  cursor: pointer; /* Changes the cursor to indicate it's clickable */
-  text-decoration: none; /* Ensures no underlines are shown */
-  display: inline-block; /* Allows the use of padding and maintains inline flow */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
-  position: relative; /* Use relative positioning */
+  position: relative;
+  margin: 0; 
+  align-self: center;
+  background-color: #37b3ed;
+  color: white;
+  border: 2px solid transparent;
+  padding: 10px 20px;
+  border-radius: 5px; 
+  transition: background-color 0.3s, border-color 0.3s; 
+  cursor: pointer; 
+  text-decoration: none; 
+  display: inline-block;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+  position: relative;
   margin-top: -15px;
 }
 
 .btn-register-message-board:hover, .btn-register-message-board:focus {
-  background-color: #149ddd; /* Darker shade on hover for feedback */
-  border-color: #147baa; /* Optionally change border color on hover for additional feedback */
+  background-color: #149ddd;
+  border-color: #147baa;
 }
 
 .button-spacing {
@@ -254,19 +242,19 @@ h6 {
   align-items: center;
   position: absolute;
   top: 520px;
-  z-index: 10; /* 确保它高于其他元素 */
+  z-index: 10; 
 }
 
 .user-name {
-  font-size: 18px; /* 根据需要调整 */
-  color: #ffffff; /* 或者根据背景颜色调整以确保足够的对比度 */
-  margin-right: 10px; /* 与注销按钮之间的间隔 */
+  font-size: 18px;
+  color: #ffffff; 
+  margin-right: 10px; 
 }
 
 .logout-btn {
   padding: 5px 15px;
   font-size: 16px;
-  background-color: #5bc0de; /* 淡蓝色背景 */
+  background-color: #5bc0de;
   color: white;
   border: none;
   border-radius: 5px;
@@ -276,7 +264,7 @@ h6 {
 }
 
 .logout-btn:hover, .logout-btn:focus {
-  background-color: #31b0d5; /* 淡蓝色背景的更深阴影 */
+  background-color: #31b0d5;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
 }
 
@@ -403,7 +391,6 @@ h6 {
 /*--------------------------------------------------------------
 # Navigation Menu
 --------------------------------------------------------------*/
-/* Desktop Navigation */
 .nav-menu {
   padding: 30px 0 0 0;
 }
@@ -452,7 +439,6 @@ h6 {
   color: #149ddd;
 }
 
-/* Mobile Navigation */
 .mobile-nav-toggle {
   position: fixed;
   right: 15px;
@@ -643,7 +629,7 @@ section {
 }
 .artistic-text {
   font-family: 'EB Garamond Italic', serif;
-  font-size: 20px; /* 根据需要设置字体大小 */
+  font-size: 20px;
 }
 
 
@@ -764,12 +750,10 @@ section {
   margin-top: 0.5rem;
 }
 
-/* 这里添加一些hover效果来增加交互性 */
 .skill:hover i {
   transform: scale(1.1);
 }
 
-/* 这里添加一些颜色和背景效果来增加时尚感 */
 .card-title {
   color: #007bff;
   text-transform: uppercase;
@@ -955,7 +939,7 @@ section {
   background: rgba(20, 157, 221, 0.75);
   transition: 0.3s;
   width: 50%;
-  display: block; /* Ensure it applies properly to both inline (Link) and block (button) elements */
+  display: block; 
 }
 
 
@@ -1046,8 +1030,8 @@ section {
 }
 
 .carousel-item img {
-  object-fit: cover; /* 或者使用 contain 根据需求 */
-  height: 600px; /* 设置期望的固定高度 */
+  object-fit: cover;
+  height: 600px;
 }
 
 /*--------------------------------------------------------------
@@ -1056,10 +1040,10 @@ section {
 
 
 .slick-slide img {
-  width: 100%; /* 减小图片的宽度 */
-  height: 400px; /* 调整高度为更小的值 */
-  object-fit: cover; /* 确保图片不变形 */
-  margin: 0 auto; /* 居中显示图片 */
+  width: 100%; 
+  height: 400px;
+  object-fit: cover; 
+  margin: 0 auto;
 }
 
 
@@ -1067,51 +1051,48 @@ section {
   transform: scale(1.05);
 }
 
-/* 可能需要调整整体滑块容器的高度 */
-/* 确保在你的CSS文件中添加以下样式 */
 .slick-list {
   margin-left: 0 !important; 
-  height: 600px; /* 移除slick-list的默认外边距 */
+  height: 600px;
 }
 
 .slick-track {
-  margin-left: 0 !important; /* 移除slick-track的默认外边距 */
+  margin-left: 0 !important;
 }
 
 .slick-slide:first-child {
-  margin-left: 0 !important; /* 对第一个滑块项设置特殊的外边距 */
+  margin-left: 0 !important;
 }
 
 .custom-slick-next, .custom-slick-prev {
-  display: flex !important; /* 启用flex布局 */
-  justify-content: center !important; /* 水平居中 */
-  align-items: center !important; /* 垂直居中 */
-  position: absolute !important; /* 使用绝对定位来放置按钮 */
-  z-index: 25 !important; /* 确保它们出现在其他元素之上 */
-  width: 60px !important; /* 设定更大的尺寸以增强可见性 */
-  height: 60px !important; /* 调整为适当的高度 */
-  background: #ffffff !important; /* 明显的背景颜色 */
-  color: #000000 !important; /* 文字颜色，同时影响SVG箭头颜色 */
-  border: 2px solid #000000 !important; /* 边框 */
-  border-radius: 25px !important; /* 圆角 */
-  opacity: 0.75 !important; /* 半透明 */
+  display: flex !important; 
+  justify-content: center !important; 
+  align-items: center !important;
+  position: absolute !important;
+  z-index: 25 !important;
+  width: 60px !important; 
+  height: 60px !important; 
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important; 
+  border-radius: 25px !important; 
+  opacity: 0.75 !important; 
 }
 
 .custom-slick-next {
-  right: 10px !important; /* 根据需要调整位置 */
+  right: 10px !important; 
 }
 
 .custom-slick-prev {
-  left: 10px !important; /* 根据需要调整位置 */
+  left: 10px !important;
 }
 
 
 
 
-/* Add media query for smaller screens */
 @media (max-width: 768px) {
   .custom-slick-next, .custom-slick-prev {
-    font-size: 20px; /* Smaller font size on mobile */
+    font-size: 20px;
   }
 }
 
@@ -1186,17 +1167,17 @@ section {
   color: #fff;
 }
 .message-board-auth-button {
-  margin: 0 5px; /* 调整按钮周围的空间 */
-  padding: 8px 16px; /* 调整按钮内部的空间 */
-  background-color: #007bff; /* 设置按钮背景颜色 */
-  color: #fff; /* 设置按钮文本颜色 */
-  border: none; /* 移除按钮边框 */
-  border-radius: 4px; /* 设置按钮边框圆角 */
-  cursor: pointer; /* 将鼠标光标设置为指针 */
+  margin: 0 5px;
+  padding: 8px 16px;
+  background-color: #007bff; 
+  color: #fff;
+  border: none; 
+  border-radius: 4px; 
+  cursor: pointer; 
 }
 
 .message-board-auth-button:hover {
-  background-color: #0056b3; /* 设置鼠标悬停时的背景颜色 */
+  background-color: #0056b3; 
 }
 
 @keyframes animate-loading {

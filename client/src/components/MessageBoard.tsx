@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axiosInstance from '../axios.config';
 import { useAuth } from '../context/AuthContext';
-import AuthModalButton from './AuthModalButton';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -72,7 +71,10 @@ const MessageBoard: React.FC<MessageBoardProps> = ({ projectId }) => {
       toast.error('Please login to leave a message.');
     }
   };
-  
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <div className="message-board-container">
@@ -96,9 +98,9 @@ const MessageBoard: React.FC<MessageBoardProps> = ({ projectId }) => {
         </form>
       ) : (
         <div className="auth-message">
-          <p>Please </p>
-          <AuthModalButton isMessageBoard={true} />
-          <p> to leave a message.</p>
+          <button className="link-like-button" onClick={scrollToTop}>
+            Please login to leave a message.
+          </button>
         </div>
       )}
       <ToastContainer />

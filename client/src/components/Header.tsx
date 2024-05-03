@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link as ScrollLink } from 'react-scroll';
-import { useAuth } from '../context/AuthContext';
+import 'boxicons/css/boxicons.min.css';
 
 const Header = () => {
   const [isActive, setIsActive] = useState(false);
   const [navBarActiveClass, setNavBarActiveClass] = useState('');
-  const { user } = useAuth();
 
   const toggleMobileNav = () => {
     setIsActive(!isActive);

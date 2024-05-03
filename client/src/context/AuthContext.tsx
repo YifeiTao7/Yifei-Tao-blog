@@ -66,7 +66,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
           'Content-Type': 'multipart/form-data'
         }
       });
-
+  
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
         setUser({
@@ -75,17 +75,18 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
           avatar: response.data.avatar
         });
         setError('');
-      } else {
-        await login({
-          email: formData.get('email') as string,
-          password: formData.get('password') as string,
-        });
       }
+
+      await login({
+        email: formData.get('email') as string,
+        password: formData.get('password') as string,
+      });
+      
     } catch (err: any) {
       setError(err.response ? err.response.data.message : 'There is register in login process');
     }
   };
-
+  
 
   const logout = () => {
     localStorage.removeItem('token');

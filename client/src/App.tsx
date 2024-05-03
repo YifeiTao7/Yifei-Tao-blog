@@ -11,7 +11,7 @@ import Contact from './components/Contact';
 import Portfolio from './components/Portfolio';
 import Life from './components/Life';
 import AdminPage from './pages/AdminPage';
-import LifeCategoryPage from './pages/LifeCategoryPage'; // 导入 LifeCategoryPage
+import LifeCategoryPage from './pages/LifeCategoryPage';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'slick-carousel/slick/slick.css';
