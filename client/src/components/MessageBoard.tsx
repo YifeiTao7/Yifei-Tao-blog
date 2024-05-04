@@ -9,7 +9,7 @@ interface Message {
   username: string;
   message: string;
   createdAt: string;
-  avatarUrl: string; 
+  avatarUrl: string;
 }
 
 interface MessageBoardProps {
@@ -19,20 +19,10 @@ interface MessageBoardProps {
 const MessageBoard: React.FC<MessageBoardProps> = ({ projectId }) => {
   const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
-  const [formData, setFormData] = useState({
-    message: ''
-  });
+  const [formData, setFormData] = useState({ message: '' });
+  const [initialLoad, setInitialLoad] = useState(true);
+  const [scrollToBottom, setScrollToBottom] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    fetchMessages();
-  }, []);
-
-  useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [messages]);
 
   const fetchMessages = async () => {
     try {
@@ -42,6 +32,19 @@ const MessageBoard: React.FC<MessageBoardProps> = ({ projectId }) => {
       toast.error('Failed to fetch messages');
     }
   };
+  
+
+  useEffect(() => {
+    fetchMessages();
+  }, [projectId]);
+
+useEffect(() => {
+  if (!initialLoad && scrollToBottom && messagesEndRef.current) {
+    messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    setScrollToBottom(false);
+  }
+}, [messages, scrollToBottom, initialLoad]);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -53,24 +56,34 @@ const MessageBoard: React.FC<MessageBoardProps> = ({ projectId }) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (user) {
-      const updatedFormData = { 
-        ...formData,
-        username: user.username,
-        avatarUrl: user.avatar || 'default-avatar.png'
-      };
-      try {
-        await axiosInstance.post(`/submit/${projectId}`, updatedFormData);
+    if (!user) {
+      toast.error('Please login to leave a message.');
+      return;
+    }
+    
+    const updatedFormData = {
+      ...formData,
+      username: user.username,
+      avatarUrl: user.avatar || 'default-avatar.png'
+    };
+  
+    try {
+      const response = await axiosInstance.post(`/submit/${projectId}`, updatedFormData);
+      if (response.data && response.data.message === "Message submitted successfully") {
         toast.success('Your message has been submitted successfully. Thank you!');
-        fetchMessages();
         setFormData({ message: '' });
-      } catch (error) {
+        await fetchMessages();
+        setScrollToBottom(true);
+      } else {
         toast.error('Failed to submit message');
       }
-    } else {
-      toast.error('Please login to leave a message.');
+    } catch (error) {
+      toast.error('Failed to submit message');
     }
   };
+  
+  
+  
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -106,6 +119,6 @@ const MessageBoard: React.FC<MessageBoardProps> = ({ projectId }) => {
       <ToastContainer />
     </div>
   );
-}
+};
 
 export default MessageBoard;
