@@ -1,5 +1,5 @@
-# 使用Node官方镜像
-FROM node:14
+# 使用Node.js的Alpine版本作为基础镜像
+FROM node:18-alpine
 
 # 设置工作目录
 WORKDIR /app/server
@@ -13,12 +13,14 @@ RUN npm install
 # 复制所有后端文件到工作目录
 COPY . .
 
+# 使用非root用户运行应用
+USER node
+
 # 环境变量
-# 注意，真实部署时应该通过环境配置的方式传入敏感信息，如数据库密码等
 ENV PORT=3001
 
 # 暴露端口3001
 EXPOSE 3001
 
 # 运行Node.js服务器
-CMD ["node", "index.js"]
+CMD ["node", "server.js"]

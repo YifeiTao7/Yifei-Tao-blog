@@ -1,24 +1,31 @@
-// routes/users.js
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
-const path = require('path');
+const { Storage } = require('@google-cloud/storage');
 const User = require('../models/user');
 const router = express.Router();
 
-const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    const uploadDir = path.join(__dirname, '..', '..', 'client', 'public', 'assets', 'img', 'avatar');
-    cb(null, uploadDir);
-  },
-  filename: function(req, file, cb) {
-    const filename = `${Date.now()}-${file.originalname}`;
-    cb(null, filename);
-  }
-});
+const credentials = {
+  type: process.env.TYPE,
+  project_id: process.env.PROJECT_ID,
+  private_key_id: process.env.PRIVATE_KEY_ID,
+  private_key: process.env.PRIVATE_KEY.replace(/\\n/g, '\n'),  // 替换转义字符以正确处理多行私钥
+  client_email: process.env.CLIENT_EMAIL,
+  client_id: process.env.CLIENT_ID,
+  auth_uri: process.env.AUTH_URI,
+  token_uri: process.env.TOKEN_URI,
+  auth_provider_x509_cert_url: process.env.AUTH_PROVIDER_X509_CERT_URL,
+  client_x509_cert_url: process.env.CLIENT_X509_CERT_URL
+};
 
-const upload = multer({ storage: storage });
+// 初始化 Google Cloud Storage
+const storage = new Storage({ credentials });
+
+const bucket = storage.bucket('yifeitaoblogs');
+
+const multerStorage = multer.memoryStorage();
+const upload = multer({ storage: multerStorage });
 
 const Statistic = require('../models/Statistic');
 
@@ -31,17 +38,33 @@ router.post('/register', upload.single('avatar'), async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
-    const avatarPath = req.file ? path.join('/assets/img/avatar', req.file.filename) : '';
+    let avatarUrl = '';
+
+    if (req.file) {
+      const blob = bucket.file(`avatar/${Date.now()}-${req.file.originalname}`);
+      const blobStream = blob.createWriteStream({
+        resumable: false,
+        metadata: { contentType: req.file.mimetype }
+      });
+
+      blobStream.on('error', err => res.status(500).json({ message: 'Failed to upload avatar', error: err.message }));
+      blobStream.end(req.file.buffer);
+
+      await new Promise(resolve => blobStream.on('finish', resolve));
+
+      avatarUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+    }
 
     const newUser = new User({
       username,
       email,
       password: hashedPassword,
-      avatar: avatarPath
+      avatar: avatarUrl
     });
 
     const savedUser = await newUser.save();
     await updateStatistic("Active Users", 1);
+
     const token = jwt.sign(
       { userId: savedUser._id, email: savedUser.email },
       process.env.JWT_SECRET,
@@ -55,7 +78,7 @@ router.post('/register', upload.single('avatar'), async (req, res) => {
       avatar: savedUser.avatar
     });
   } catch (error) {
-    res.status(500).json({ message: "Error registering new user" });
+    res.status(500).json({ message: "Error registering new user", error: error.message });
   }
 });
 
@@ -99,3 +122,4 @@ router.post('/login', async (req, res) => {
 });
 
 module.exports = router;
+
