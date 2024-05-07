@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  frontend:
+    build: ./client
+    ports:
+      - "80:80"  # 将容器的3000端口映射到主机的80端口
+    depends_on:
+      - backend
+
+  backend:
+    build: ./server
+    ports:
+      - "3001:3001"  # 将容器的3001端口映射到主机的3001端口
+    environment:
+      - MONGODB_URI=mongodb+srv://yifeitao970407:Tyf545466@blog.ci293au.mongodb.net/blog?retryWrites=true&w=majority&appName=blog
+      - EMAIL_USERNAME=yifeitao970407@gmail.com
+      - EMAIL_PASSWORD=Tyf545466
+      - TARGET_EMAIL=yifeitao970407@gmail.com
+      - JWT_SECRET=8f2c10b546d1a2b3c4d5e6f7089a0b1c2d3e4f5a6b7c8d9e0fa1b2c3d4e5f6a7
+      - GOOGLE_APPLICATION_CREDENTIALS=./secrets/google-storage-key.json
