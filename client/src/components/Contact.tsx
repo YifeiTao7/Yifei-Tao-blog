@@ -26,7 +26,8 @@ function Contact() {
                 <h4>Call:</h4>
                 <p>+61 0481359916</p>
               </div>
-              <iframe src="https://www.google.com/maps/embed?..." frameBorder="0" style={{ border: 0, width: '100%', height: '290px' }} allowFullScreen></iframe>
+              <iframe src="https://www.google.com/maps/embed?..." title="Google Map" frameBorder="0" style={{ border: 0, width: '100%', height: '290px' }} allowFullScreen></iframe>
+
             </div>
           </div>
           <div className="col-lg-7 mt-5 mt-lg-0">

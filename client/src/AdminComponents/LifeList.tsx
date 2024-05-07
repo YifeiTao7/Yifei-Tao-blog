@@ -156,11 +156,12 @@ const LifeList = () => {
           </div>
         ))}
         {editingLifeItem?.images.map((image, index) => (
-          <div key={index}>
-            <img src={image} alt={`Life Item Image ${index}`} style={{ width: '100px', height: '100px' }} />
-            <button type="button" onClick={() => handleRemoveLifeImage(index)}>Remove</button>
-          </div>
-        ))}
+  <div key={index}>
+    <img src={image} alt={`Item ${index}`} style={{ width: '100px', height: '100px' }} />
+    <button type="button" onClick={() => handleRemoveLifeImage(index)}>Remove</button>
+  </div>
+))}
+
         <button type="submit">{isCreatingLifeItem ? 'Create' : 'Save'}</button>
         <button type="button" onClick={handleLifeItemCancel}>Cancel</button>
       </form>

@@ -173,7 +173,7 @@ const PortfolioComponent = () => {
         ))}
         {editingPortfolio?.imageUrls.map((url, index) => (
           <div key={index}>
-            <img src={url} alt={`Portfolio Image ${index}`} style={{ width: '100px', height: '100px' }} />
+            <img src={url} alt={`Portfolio ${index}`} style={{ width: '100px', height: '100px' }} />
             <button type="button" onClick={() => handleRemovePortfolioImage(index)}>Remove</button>
           </div>
         ))}
@@ -194,7 +194,7 @@ const PortfolioComponent = () => {
           <p><strong>GitHub URL:</strong> <a href={portfolio.githubUrl} target="_blank" rel="noopener noreferrer">{portfolio.githubUrl}</a></p>
           <p><strong>Live Demo URL:</strong> <a href={portfolio.liveDemoUrl} target="_blank" rel="noopener noreferrer">{portfolio.liveDemoUrl}</a></p>
           {portfolio.imageUrls.map((url, index) => (
-            <img key={index} src={url} alt={`${portfolio.title} Image ${index + 1}`} style={{ width: '100px', height: '100px' }} />
+            <img key={index} src={url} alt={`${portfolio.title}  ${index + 1}`} style={{ width: '100px', height: '100px' }} />
           ))}
           <button onClick={() => setEditingPortfolio(portfolio)}>Edit</button>
           <button onClick={() => handleDeletePortfolio(portfolio._id)}>Delete</button>
