@@ -46,8 +46,16 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "rules": {
+      "jsx-a11y/img-redundant-alt": "warn",
+      "@typescript-eslint/no-unused-vars": "warn",
+      "react-hooks/exhaustive-deps": "warn",
+      "no-unused-vars": "warn",
+      "no-console": "off"
+    }
   },
+  
   "browserslist": {
     "production": [
       ">0.2%",
@@ -61,6 +69,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@types/aos": "^3.0.7",
     "@types/isotope-layout": "^3.0.13",
     "@types/jwt-decode": "^3.1.0",
