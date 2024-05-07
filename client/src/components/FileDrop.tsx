@@ -23,6 +23,7 @@ const FileDrop: React.FC<FileDropProps> = ({ onDrop, clearPreviews }) => {
     multiple: true 
   });
 
+  // eslint-disable-next-line no-unused-vars
   const clearPreviewImages = () => {
     setPreviews([]);
     if (clearPreviews) {

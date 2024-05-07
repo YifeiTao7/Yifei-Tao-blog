@@ -70,6 +70,7 @@ const Portfolio = () => {
 
     const handleLike = async (projectId: string) => {
         try {
+            // eslint-disable-next-line no-unused-vars
             const response = await axiosInstance.post(`/portfolio/${projectId}/like`);
             const updatedProjects = projects.map(project => {
                 if (project._id === projectId) {

@@ -20,6 +20,7 @@ const MessageBoard: React.FC<MessageBoardProps> = ({ projectId }) => {
   const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [formData, setFormData] = useState({ message: '' });
+  // eslint-disable-next-line no-unused-vars
   const [initialLoad, setInitialLoad] = useState(true);
   const [scrollToBottom, setScrollToBottom] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
