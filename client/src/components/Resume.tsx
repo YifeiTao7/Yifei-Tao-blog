@@ -11,16 +11,10 @@ function Resume() {
 
         <div className="row">
           <div className="col-lg-6" data-aos="fade-up">
-            <h3 className="resume-title">Sumary</h3>
+            <h3 className="resume-title">Summary</h3>
             <div className="resume-item pb-0">
               <h4>Yifei Tao</h4>
-              <p><em>Energetic Computer Science Master's graduate skilled in
-HTML, CSS, JavaScript, Python, Java, and modern
-frameworks such as React and Next.js. Recognized for a
-strong work ethic, quick learning capability, and excellent
-problem-solving skills. Thrives in team settings, contributing
-to project success with a proactive and collaborative
-approach.
+              <p><em>Energetic Computer Science Master's graduate skilled in a wide array of technologies. Proficient in frontend development with HTML, CSS, JavaScript, React, Next.js, and TypeScript. Experienced in backend development using Node.js, Express, and GraphQL. Proficient in database management with MongoDB and relational databases. Additionally, adept in Java, Python, and C#. Possesses knowledge of Google Cloud Platform (GCP) and Amazon Web Services (AWS) services. Recognized for a strong work ethic, quick learning capability, and excellent problem-solving skills. Thrives in team settings, contributing to project success with a proactive and collaborative approach. As a full-stack engineer, capable of orchestrating end-to-end project development and proficient in independent deployment tasks.
 </em></p>
               <ul>
                 <li>Canberra</li>
@@ -34,13 +28,13 @@ approach.
               <h4>Master of Computing</h4>
               <h5>2020 - 2022</h5>
               <p><em>The Australian National University</em></p>
-              <p>Qui deserunt veniam. Et sed aliquam labore tempore sed quisquam iusto autem sit. Ea vero voluptatum qui ut dignissimos deleniti nerada porti sand markend</p>
-            </div>
+              <p>During my time at The Australian National University, I delved into Discrete Mathematical Models, Relational Databases, Java, Computer Vision, Software Construction, and Web Development. Project courses enhanced my skills in Git and teamwork. These experiences have equipped me with a strong foundation in computer science and valuable collaborative abilities.</p>            </div>
             <div className="resume-item">
               <h4>Bachelor of Engineering</h4>
               <h5>2016 - 2020</h5>
               <p><em>Wuhan University of Technology</em></p>
-              <p>Quia nobis sequi est occaecati aut. Repudiandae et iusto quae reiciendis et quis Eius vel ratione eius unde vitae rerum voluptates asperiores voluptatem Earum molestiae consequatur neque etlon sader mart dila</p>
+              <p>
+During my time at Wuhan University of Technology, I immersed myself in a comprehensive curriculum encompassing Advanced Mathematics, Engineering Graphics, Automotive Theory, Automotive Dynamics, Materials Science, and Engine Principles. Complemented by extensive CAD drafting and hands-on experience with machine lathes, these studies not only enriched my understanding of engineering but also fostered a structured engineer's mindset.</p>
             </div>
           </div>
           <div className="col-lg-6" data-aos="fade-up" data-aos-delay="100">
