@@ -23,8 +23,8 @@ const About = () => {
               <div className="col-lg-6">
                 <ul>
                   <li><i className="bi bi-chevron-right"></i> <strong>Birthday:</strong> <span>7 April 1997</span></li>
-                  <li><i className="bi bi-chevron-right"></i> <strong>Website:</strong> <span>www.yifeitao.com</span></li>
-                  <li><i className="bi bi-chevron-right"></i> <strong>Phone:</strong> <span>+61 04981359916</span></li>
+                  <li><i className="bi bi-chevron-right"></i> <strong>Website:</strong> <span>www.yifei-tao.com</span></li>
+                  <li><i className="bi bi-chevron-right"></i> <strong>Phone:</strong> <span>+61 0481359916</span></li>
                   <li><i className="bi bi-chevron-right"></i> <strong>City:</strong> <span>Canberra, Australia</span></li>
                 </ul>
               </div>
