@@ -306,18 +306,18 @@ h6 {
 /*--------------------------------------------------------------
 # Header
 --------------------------------------------------------------*/
+
 #header {
   position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
   width: 300px;
-  transition: all ease-in-out 0.5s;
-  z-index: 9997;
-  transition: all 0.5s;
   padding: 0 15px;
   background: #040b14;
   overflow-y: auto;
+  transition: left 0.5s ease-in-out;
+  z-index: 9997;
 }
 
 #header .profile img {
@@ -328,23 +328,15 @@ h6 {
 
 #header .profile h1 {
   font-size: 24px;
-  margin: 0;
-  padding: 0;
   font-weight: 600;
-  -moz-text-align-last: center;
   text-align-last: center;
   font-family: "Poppins", sans-serif;
-}
-
-#header .profile h1 a,
-#header .profile h1 a:hover {
   color: #fff;
   text-decoration: none;
 }
 
 #header .profile .social-links a {
   font-size: 18px;
-  display: inline-block;
   background: #212431;
   color: #fff;
   line-height: 1;
@@ -354,13 +346,11 @@ h6 {
   text-align: center;
   width: 36px;
   height: 36px;
-  transition: 0.3s;
+  transition: background 0.3s, color 0.3s;
 }
 
 #header .profile .social-links a:hover {
   background: #149ddd;
-  color: #fff;
-  text-decoration: none;
 }
 
 #main {
@@ -375,7 +365,11 @@ h6 {
 
 @media (max-width: 1199px) {
   #header {
-    left: -300px;
+    left: -300px; /* 在小屏幕上隐藏导航 */
+  }
+
+  #header.mobile-visible {
+    left: 0; /* 激活状态时显示导航 */
   }
 
   #main {
@@ -392,8 +386,9 @@ h6 {
 /*--------------------------------------------------------------
 # Navigation Menu
 --------------------------------------------------------------*/
+
 .nav-menu {
-  padding: 30px 0 0 0;
+  padding-top: 30px;
 }
 
 .nav-menu * {
@@ -402,24 +397,21 @@ h6 {
   list-style: none;
 }
 
-.nav-menu>ul>li {
+.nav-menu > ul > li {
   position: relative;
-  white-space: nowrap;
 }
 
-.nav-menu a,
-.nav-menu a:focus {
+.nav-menu a {
   display: flex;
   align-items: center;
   color: #a8a9b4;
   padding: 12px 15px;
   margin-bottom: 8px;
-  transition: 0.3s;
+  transition: color 0.3s;
   font-size: 15px;
 }
 
-.nav-menu a i,
-.nav-menu a:focus i {
+.nav-menu a i {
   font-size: 24px;
   padding-right: 8px;
   color: #6f7180;
@@ -427,16 +419,13 @@ h6 {
 
 .nav-menu a:hover,
 .nav-menu .active,
-.nav-menu .active:focus,
-.nav-menu li:hover>a {
-  text-decoration: none;
+.nav-menu li:hover > a {
   color: #fff;
 }
 
 .nav-menu a:hover i,
 .nav-menu .active i,
-.nav-menu .active:focus i,
-.nav-menu li:hover>a i {
+.nav-menu li:hover > a i {
   color: #149ddd;
 }
 
@@ -445,10 +434,6 @@ h6 {
   right: 15px;
   top: 15px;
   z-index: 9998;
-  border: 0;
-  font-size: 24px;
-  transition: all 0.4s;
-  outline: none !important;
   background-color: #149ddd;
   color: #fff;
   width: 40px;
@@ -456,18 +441,12 @@ h6 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  line-height: 0;
   border-radius: 50px;
   cursor: pointer;
+  transition: background-color 0.4s;
 }
 
-.mobile-nav-active {
-  overflow: hidden;
-}
 
-.mobile-nav-active #header {
-  left: 0;
-}
 
 /*--------------------------------------------------------------
 # Hero Section
