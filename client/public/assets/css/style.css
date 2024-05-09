@@ -363,6 +363,25 @@ h6 {
   padding-right: 30px;
 }
 
+@media (max-width: 1199px) {
+  #header {
+    left: -300px; /* 在小屏幕上隐藏导航 */
+  }
+
+  #header.mobile-visible {
+    left: 0; /* 激活状态时显示导航 */
+  }
+
+  #main {
+    margin-left: 0;
+  }
+
+  .container,
+  .container-fluid {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
 
 /*--------------------------------------------------------------
 # Navigation Menu
@@ -412,9 +431,9 @@ h6 {
 
 .mobile-nav-toggle {
   position: fixed;
-  top: 15px;
-  left: 15px;
-  z-index: 9998;
+  right: 15px; /* Maintain spacing from the right edge */
+  top: 15px; /* Maintain spacing from the top */
+  z-index: 10000; /* Ensure it is above other elements */
   background-color: #149ddd;
   color: #fff;
   width: 40px;
@@ -425,40 +444,6 @@ h6 {
   border-radius: 50px;
   cursor: pointer;
   transition: background-color 0.4s;
-}
-
-@media (max-width: 991px) {
-  #header {
-    left: -300px;
-  }
-
-  #header.mobile-visible {
-    left: 0;
-  }
-
-  #main {
-    margin-left: 0;
-  }
-
-  .container,
-  .container-fluid {
-    padding-left: 12px;
-    padding-right: 12px;
-  }
-}
-
-@media (max-width: 767px) {
-  .mobile-nav-toggle {
-    display: block; /* 在较小的屏幕上显示菜单按钮 */
-  }
-
-  .nav-menu {
-    display: none; /* 在较小的屏幕上隐藏导航菜单 */
-  }
-
-  .nav-menu.active {
-    display: block; /* 在激活状态下显示导航菜单 */
-  }
 }
 
 
@@ -1058,13 +1043,11 @@ section {
   font-size: 24px;
   font-weight: bold;
   font-family: Arial, sans-serif;
-  color: #333; /* Darken the text color */
 }
 
 .quote {
   font-size: 18px;
   font-family: 'Segoe Script', cursive;
-  color: #666; /* Darken the text color */
 }
 
 .category-slide:hover {
@@ -1108,29 +1091,10 @@ section {
 }
 
 @media (max-width: 768px) {
-  .slick-slide img {
-    height: 300px; /* Decrease image height for smaller screens */
-  }
-
-  .category-quote-container {
-    bottom: 10px; /* Adjust vertical position */
-    padding: 8px; /* Decrease padding */
-  }
-
-  .category {
-    font-size: 20px; /* Decrease font size */
-  }
-
-  .quote {
-    font-size: 16px; /* Decrease font size */
-  }
-
   .custom-slick-next, .custom-slick-prev {
-    width: 40px !important; /* Decrease button size */
-    height: 40px !important; /* Decrease button size */
+    font-size: 20px;
   }
 }
-
 
 
 /*--------------------------------------------------------------
