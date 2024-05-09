@@ -28,6 +28,7 @@ const Portfolio = () => {
                 setProjects(response.data);
                 setProjectsFetched(true);
             } catch (error) {
+                console.error('Failed to fetch projects:', error);
             }
         };
 
@@ -37,6 +38,18 @@ const Portfolio = () => {
 
     useLayoutEffect(() => {
         if (projectsFetched && isoRef.current) {
+            const observer = new MutationObserver(() => {
+                if (isotope.current) {
+                    isotope.current.layout();
+                }
+            });
+
+            observer.observe(isoRef.current, {
+                childList: true,
+                subtree: true,
+                attributes: true
+            });
+
             isotope.current = new Isotope(isoRef.current, {
                 itemSelector: '.portfolio-item',
                 layoutMode: 'fitRows'
@@ -46,13 +59,13 @@ const Portfolio = () => {
                 selector: '.glightbox'
             });
 
-            isotope.current.layout();
             return () => {
+                observer.disconnect();
                 isotope.current?.destroy();
                 lightbox.close();
             };
         }
-    }, [projectsFetched, isoRef.current]);
+    }, [projectsFetched]);
 
     useEffect(() => {
         if (projectsFetched && isotope.current) {
@@ -80,6 +93,7 @@ const Portfolio = () => {
             });
             setProjects(updatedProjects);
         } catch (error) {
+            console.error('Failed to like project:', error);
         }
     };
 
@@ -88,7 +102,6 @@ const Portfolio = () => {
             <div className="container">
                 <div className="section-title">
                     <h2>Portfolio</h2>
-                    <p>These are the projects I have been fortunate enough to participate in and the results of my work</p>
                 </div>
                 <div className="row" data-aos="fade-up">
                     <div className="col-lg-12 d-flex justify-content-center">

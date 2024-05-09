@@ -98,7 +98,6 @@ const Life: React.FC = () => {
       <div className="container">
         <div className="section-title">
           <h2>Life</h2>
-          <p>Here is a record of my wonderful everyday life</p>
         </div>
         <Slider {...settings}>
           {lifeItems.map((item) => (
