@@ -33,6 +33,7 @@ const SkillCard: React.FC<SkillCardProps> = ({ title, skills, color }) => {
 };
 
 const Skills: React.FC = () => {
+  // eslint-disable-next-line no-unused-vars
   const [skills, setSkills] = useState<Skill[]>([]);
   const [frontendSkills, setFrontendSkills] = useState<Skill[]>([]);
   const [backendSkills, setBackendSkills] = useState<Skill[]>([]);
