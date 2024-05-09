@@ -16,16 +16,11 @@ interface ArrowButtonProps {
 }
 
 const NextArrow: React.FC<ArrowButtonProps> = ({ onClick }) => (
-  <button
-    className="slick-next custom-slick-next"
-    onClick={onClick}
-    aria-label="Next"
-    style={{ fontSize: 0 }}
-  >
+  <button className="slick-next custom-slick-next" onClick={onClick} aria-label="Next">
     <svg
       width="100%"
       height="100%"
-      viewBox="0 0 24 24" 
+      viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
       strokeWidth="3"
@@ -38,16 +33,11 @@ const NextArrow: React.FC<ArrowButtonProps> = ({ onClick }) => (
 );
 
 const PrevArrow: React.FC<ArrowButtonProps> = ({ onClick }) => (
-  <button
-    className="slick-prev custom-slick-prev"
-    onClick={onClick}
-    aria-label="Previous"
-    style={{ fontSize: 0 }}
-  >
+  <button className="slick-prev custom-slick-prev" onClick={onClick} aria-label="Previous">
     <svg
       width="100%"
       height="100%"
-      viewBox="0 0 24 24" 
+      viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
       strokeWidth="3"
@@ -81,8 +71,8 @@ const Life: React.FC = () => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    nextArrow: <NextArrow onClick={undefined} />,
-    prevArrow: <PrevArrow onClick={undefined} />,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
     responsive: [
       {
         breakpoint: 1024,
@@ -90,17 +80,17 @@ const Life: React.FC = () => {
           slidesToShow: 1,
           slidesToScroll: 1,
           infinite: true,
-          dots: true
-        }
+          dots: true,
+        },
       },
       {
         breakpoint: 600,
         settings: {
           slidesToShow: 1,
-          slidesToScroll: 1
-        }
-      }
-    ]
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
 
   return (
@@ -112,11 +102,13 @@ const Life: React.FC = () => {
         </div>
         <Slider {...settings}>
           {lifeItems.map((item) => (
-            <div key={item._id}>
+            <div key={item._id} className="life-slide">
               <Link to={`/life/${item.category}`}>
-                <img src={item.images[0]} alt={item.category} style={{ width: '100%' }} />
-                <h4>{item.category}</h4>
-                <p>{item.quote}</p>
+                <img src={item.images[0]} alt={item.category} />
+                <div className="category-quote-container">
+                  <h4 className="category">{item.category}</h4>
+                  <p className="quote">{item.quote}</p>
+                </div>
               </Link>
             </div>
           ))}
