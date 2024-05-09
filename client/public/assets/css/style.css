@@ -1043,11 +1043,13 @@ section {
   font-size: 24px;
   font-weight: bold;
   font-family: Arial, sans-serif;
+  color: #333; /* Darken the text color */
 }
 
 .quote {
   font-size: 18px;
   font-family: 'Segoe Script', cursive;
+  color: #666; /* Darken the text color */
 }
 
 .category-slide:hover {
@@ -1091,8 +1093,26 @@ section {
 }
 
 @media (max-width: 768px) {
+  .slick-slide img {
+    height: 300px; /* Decrease image height for smaller screens */
+  }
+
+  .category-quote-container {
+    bottom: 10px; /* Adjust vertical position */
+    padding: 8px; /* Decrease padding */
+  }
+
+  .category {
+    font-size: 20px; /* Decrease font size */
+  }
+
+  .quote {
+    font-size: 16px; /* Decrease font size */
+  }
+
   .custom-slick-next, .custom-slick-prev {
-    font-size: 20px;
+    width: 40px !important; /* Decrease button size */
+    height: 40px !important; /* Decrease button size */
   }
 }
 
