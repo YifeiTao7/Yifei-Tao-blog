@@ -5,8 +5,8 @@ import { jwtDecode } from 'jwt-decode';
 
 interface User {
   username: string;
-  email:string;
-  avatar:string;
+  email: string;
+  avatar: string;
 }
 
 interface AuthContextType {
@@ -27,7 +27,6 @@ interface CustomJwtPayload {
   email: string;
 }
 
-
 const AuthContext = createContext<AuthContextType | null>(null);
 
 interface AuthProviderProps {
@@ -38,26 +37,24 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string>('');
 
-  const login = async (formData: any) => {
+  const login = async (formData: LoginForm) => {
     try {
       const response = await axiosInstance.post('/users/login', formData);
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
-  
         const decoded: CustomJwtPayload = jwtDecode(response.data.token); 
         setUser({
           username: response.data.username,
           email: decoded.email,
           avatar: response.data.avatar || '/default-avatar.png',
         });
+        setError('');
       }
     } catch (err: any) {
-      setError(err.response ? err.response.data.message : 'There is error in login process');
+      setError(err.response ? err.response.data.message : 'There is an error in the login process');
+      throw err;
     }
   };
-  
-  
-
 
   const register = async (formData: FormData) => {
     try {
@@ -69,31 +66,31 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
+        const decoded: CustomJwtPayload = jwtDecode(response.data.token);
         setUser({
           username: response.data.username,
-          email: response.data.email,
+          email: decoded.email,
           avatar: response.data.avatar
         });
         setError('');
+        await login({
+          email: formData.get('email') as string,
+          password: formData.get('password') as string,
+        });
+      } else {
+        setError('Registration successful but no token received.');
       }
-
-      await login({
-        email: formData.get('email') as string,
-        password: formData.get('password') as string,
-      });
-      
     } catch (err: any) {
-      setError(err.response ? err.response.data.message : 'There is register in login process');
+      setError(err.response ? err.response.data.message : 'There is an error in the registration process');
+      throw err;
     }
   };
-  
 
   const logout = () => {
     localStorage.removeItem('token');
     setUser(null);
+    setError('');
   };
-
-  
 
   return (
     <AuthContext.Provider value={{ user, login, register, logout, error }}>
@@ -104,7 +101,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === null) {
+  if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;

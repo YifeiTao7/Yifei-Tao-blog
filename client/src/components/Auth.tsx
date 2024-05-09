@@ -60,12 +60,12 @@ const Auth: React.FC<AuthProps> = ({ toggleModal }) => {
         toast.success('Login successful!');
         toggleModal();
       }
-    } catch (error) {
-      toast.error('Authentication failed. Please try again.');
+    } catch (err) {
+      toast.error(error || 'Authentication failed. Please try again.');
     }
   };
   
-
+  
   return (
     <div className="auth-container mt-4">
       <form className="auth-form" onSubmit={handleSubmit}>
@@ -105,7 +105,7 @@ const Auth: React.FC<AuthProps> = ({ toggleModal }) => {
             className="form-control"
             id="email"
             name="email"
-            value={formData.email} 
+            value={formData.email}
             onChange={handleChange}
             required
           />
@@ -117,6 +117,7 @@ const Auth: React.FC<AuthProps> = ({ toggleModal }) => {
             className="form-control"
             id="password"
             name="password"
+            value={formData.password}
             onChange={handleChange}
             required
           />
@@ -127,9 +128,7 @@ const Auth: React.FC<AuthProps> = ({ toggleModal }) => {
         <button
           type="button"
           className="btn btn-link"
-          onClick={() => {
-            setIsRegistering(!isRegistering);
-          }}
+          onClick={() => setIsRegistering(!isRegistering)}
         >
           {isRegistering ? "Already have an account? Login" : "Don't have an account? Register"}
         </button>
