@@ -67,7 +67,7 @@ const PortfolioComponent = () => {
       const formData = new FormData();
       newPortfolioFiles.forEach(file => formData.append('files', file, file.name));
 
-      const uploadResponse = await axiosInstance.post('/upload/portfolio', formData, {
+      const uploadResponse = await axiosInstance.post('uploads/upload/portfolio', formData, {
         headers: {'Content-Type': 'multipart/form-data'},
       });
 

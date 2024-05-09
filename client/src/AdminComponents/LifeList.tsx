@@ -60,7 +60,7 @@ const LifeList = () => {
       const formData = new FormData();
       newLifeItemFiles.forEach(file => formData.append('files', file, file.name));
   
-      const uploadResponse = await axiosInstance.post('/upload/life', formData, {
+      const uploadResponse = await axiosInstance.post('uploads/upload/life', formData, {
         headers: {'Content-Type': 'multipart/form-data'},
       });
   

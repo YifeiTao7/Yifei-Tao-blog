@@ -11,6 +11,7 @@ const portfolioRoutes = require('./Routes/portfolio');
 const lifeItemsRouter = require('./Routes/LifeItem');
 const uploadRoutes = require('./Routes/uploadRoutes');
 const messagesRouter = require('./Routes/messages');
+const skillRoutes = require('./Routes/skills');
 
 const app = express();
 
@@ -54,9 +55,10 @@ app.post('/send-email', (req, res) => {
 app.use('/api/users', userRoutes);
 app.use('/api/portfolio', portfolioRoutes);
 app.use('/api/life', lifeItemsRouter);
-app.use('/api', uploadRoutes);
 app.use('/api/statistics', statisticsRouter);
-app.use('/api', messagesRouter);
+app.use('/api/uploads', uploadRoutes); 
+app.use('/api/messages', messagesRouter);
+app.use('/api/skills', skillRoutes); 
 
 app.use(express.static('client/public'));
 

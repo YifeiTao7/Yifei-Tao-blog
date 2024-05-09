@@ -27,7 +27,7 @@ const MessageBoard: React.FC<MessageBoardProps> = ({ projectId }) => {
 
   const fetchMessages = async () => {
     try {
-      const response = await axiosInstance.get<Message[]>(`/${projectId}`);
+      const response = await axiosInstance.get<Message[]>(`messages/${projectId}`);
       setMessages(response.data);
     } catch (error) {
       toast.error('Failed to fetch messages');
@@ -69,7 +69,7 @@ useEffect(() => {
     };
   
     try {
-      const response = await axiosInstance.post(`/submit/${projectId}`, updatedFormData);
+      const response = await axiosInstance.post(`messages/submit/${projectId}`, updatedFormData);
       if (response.data && response.data.message === "Message submitted successfully") {
         toast.success('Your message has been submitted successfully. Thank you!');
         setFormData({ message: '' });
