@@ -180,8 +180,6 @@ const PortfolioComponent = () => {
         <button type="submit">{isCreatingPortfolio ? 'Create' : 'Save'}</button>
         <button type="button" onClick={handlePortfolioCancel}>Cancel</button>
       </form>
-  
-      {/* Display portfolios */}
       {portfolios.map((portfolio) => (
         <div key={portfolio._id}>
           <h3>{portfolio.title}</h3>
@@ -200,15 +198,10 @@ const PortfolioComponent = () => {
           <button onClick={() => handleDeletePortfolio(portfolio._id)}>Delete</button>
         </div>
       ))}
-  
-      {/* Button to create new portfolio */}
+
       <button onClick={startCreatingPortfolio}>Create New Portfolio</button>
-  
-      {/* Loading and error messages */}
       {loading && <p>Loading...</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
-  
-      {/* ToastContainer for displaying notifications */}
       <ToastContainer />
     </div>
   );

@@ -179,7 +179,6 @@ const LifeList = () => {
       <button onClick={startCreatingLifeItem}>Create New Life Item</button>
       {loading && <p>Loading...</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      {/* ToastContainer for displaying notifications */}
       <ToastContainer />
     </div>
   );

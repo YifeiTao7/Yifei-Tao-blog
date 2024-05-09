@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PortfolioList from '../AdminComponents/PortfolioList';
 import LifeList from '../AdminComponents/LifeList';
+import SkillList from '../AdminComponents/SkillList';
 
 
 
@@ -20,7 +21,7 @@ const AdminPage = () => {
       ) : (
         <LifeList />
       )}
-
+<SkillList/>
     </div>
   );
 };
