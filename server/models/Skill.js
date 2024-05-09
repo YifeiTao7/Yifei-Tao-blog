@@ -14,10 +14,6 @@ const skillSchema = new mongoose.Schema({
     type: String,
     required: true,
     enum: ['Frontend', 'Backend', 'Database', 'Cloud']
-  },
-  active: {
-    type: Boolean,
-    default: false
   }
 });
 

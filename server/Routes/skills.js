@@ -1,13 +1,11 @@
 // routes/skills.js
 const express = require('express');
 const router = express.Router();
-const Skill = require('../models/Skill'); // 确保路径正确
+const Skill = require('../models/Skill');
 
 router.get('/', async (req, res) => {
   try {
-    console.log("Fetching skills...");
     const skills = await Skill.find();
-    console.log("Skills fetched:", skills);
     res.json(skills);
   } catch (err) {
     console.error("Error fetching skills:", err);
@@ -16,7 +14,6 @@ router.get('/', async (req, res) => {
 });
 
 
-// 创建一个新的技能
 router.post('/', async (req, res) => {
   const skill = new Skill({
     name: req.body.name,
@@ -33,12 +30,10 @@ router.post('/', async (req, res) => {
   }
 });
 
-// 获取特定技能
 router.get('/:id', getSkill, (req, res) => {
   res.json(res.skill);
 });
 
-// 更新技能
 router.patch('/:id', getSkill, async (req, res) => {
   if (req.body.name != null) {
     res.skill.name = req.body.name;
@@ -61,15 +56,18 @@ router.patch('/:id', getSkill, async (req, res) => {
   }
 });
 
-// 删除技能
 router.delete('/:id', getSkill, async (req, res) => {
   try {
-    await res.skill.remove();
-    res.json({ message: 'Deleted Skill' });
+      if (!res.skill) {
+          return res.status(404).json({ message: 'Skill not found' });
+      }
+      await res.skill.deleteOne();
+      res.json({ message: 'Deleted Skill' });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+      res.status(500).json({ message: err.message });
   }
 });
+
 
 async function getSkill(req, res, next) {
   let skill;
