@@ -76,7 +76,7 @@ const Portfolio = () => {
     const [filterKey, setFilterKey] = useState('*');
     useEffect(() => {
         if (isotope.current) {
-            const filterValue = filterKey === '*' ? '*' : `.${filterKey}`;
+            const filterValue = filterKey === '*' ? '*' : `.filter-${filterKey}`;
             isotope.current.arrange({ filter: filterValue });
         }
     }, [filterKey]);
